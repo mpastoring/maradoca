@@ -1,5 +1,5 @@
-import Hero from "@/components/hero";
 import CloudBackground from "@/components/cloud-background";
+import Hero from "@/components/hero";
 import MusicPlayer from "@/components/music-player";
 import UpcomingEvents from "@/components/upcoming-events";
 
