@@ -1,0 +1,244 @@
+{
+  "personalInfo": {
+    "name": "Mandy Rauschner",
+    "professionalAlias": "Maradoca",
+    "age": 30,
+    "location": "Leipzig, Germany",
+    "languages": [
+      "German",
+      "English",
+      "Spanish",
+      "Learning French"
+    ]
+  },
+  "education": {
+    "degrees": [
+      {
+        "level": "B.Sc.",
+        "field": "Biochemistry"
+      },
+      {
+        "level": "M.Sc.",
+        "field": "Molecular Medicine"
+      },
+      {
+        "level": "Ph.D. candidate",
+        "field": "Cancer Research",
+        "status": "thesis pending",
+        "degree": "cand. Dr. rer. nat."
+      }
+    ]
+  },
+  "professionalBackground": {
+    "certifications": [
+      "Certified Zumba Instructor",
+      "Yoga Trainer",
+      "Health Coach",
+      "Mindfulness Practitioner",
+      "Psychological Health Management Specialist"
+    ],
+    "coachingCareer": {
+      "role": "Coach",
+      "focus": [
+        "Health",
+        "Nutrition",
+        "Mental Health",
+        "Mindfulness",
+        "Personal Development"
+      ],
+      "services": [
+        "Health consulting",
+        "Guiding self-improvement journeys",
+        "Organizing wellness retreats"
+      ]
+    }
+  },
+  "musicCareer": {
+    "djName": "MARADOCA",
+    "genres": [
+      "Melodic House",
+      "Techno",
+      "Progressive",
+      "Afrohouse",
+      "Trance"
+    ],
+    "performanceTypes": [
+      "Festivals",
+      "Nightclubs",
+      "Conscious dance events",
+      "Wellness retreats"
+    ],
+    "goal": "To create a journey of freedom through music and emotional connection",
+    "musicStyle": {
+      "description": "Mixing melodic, tropical, and cosmic elements in a progressive flow",
+      "influences": [
+        "Melodic techno",
+        "Progressive house",
+        "Cosmic sounds"
+      ]
+    },
+    "soundcloudInfo": {
+      "username": "MARADOCA",
+      "accountType": "NEXT PRO",
+      "profileUrl": "https://soundcloud.com/maradoca",
+      "popularTracks": [
+        {
+          "title": "Obenmusik Podcast 122 By Maradoca",
+          "plays": 2454,
+          "description": "A podcast featuring Maradoca's DJ set.",
+          "posted": "5 months ago"
+        },
+        {
+          "title": "[HOT SHOT SERIES 118] - Podcast by MARADOCA [M.D.H.]",
+          "plays": 3251,
+          "description": "Podcast featuring a deep melodic house mix.",
+          "posted": "5 months ago"
+        },
+        {
+          "title": "#3 Lauscht Podcast by Maradoca - DJ Set",
+          "plays": 55,
+          "description": "A DJ set by Maradoca.",
+          "posted": "5 months ago"
+        }
+      ],
+      "recentActivities": [
+        {
+          "title": "Progressive & Melodic Techno: An emotional journey to freedom! (Luises Garten Teil II)",
+          "plays": 204,
+          "posted": "5 months ago"
+        },
+        {
+          "title": "Live @ Empowerment Retreat Mallorca: Change & Create <3",
+          "plays": 99,
+          "posted": "5 months ago"
+        },
+        {
+          "title": "Super Progressive Afro Mix (Luises Garten MD Teil 1)",
+          "plays": 139,
+          "posted": "5 months ago"
+        }
+      ]
+    }
+  },
+  "events": {
+    "upcoming": [
+      {
+        "date": "2024-08-14",
+        "venue": "Insel der Jugend",
+        "location": "Magdeburg"
+      }
+    ],
+    "past": [
+      {
+        "date": "2024-08-10",
+        "venue": "Wilde Möhre I FLINTA*Workshop Equalize",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2024-08-02",
+        "venue": "NatureOne Camp",
+        "location": "Unknown"
+      },
+      {
+        "date": "2024-07-26",
+        "venue": "H12KK Festival",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2024-07-10",
+        "venue": "Bunte Wiese",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2024-05-25",
+        "venue": "Lisbeth Lauscht",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2024-03-05",
+        "venue": "Charles Bronson",
+        "location": "Halle (Saale)"
+      },
+      {
+        "date": "2024-01-24",
+        "venue": "H2K4 Festival",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2024-01-12",
+        "venue": "NousNous",
+        "location": "Leipzig"
+      },
+      {
+        "date": "2023-10-28",
+        "venue": "Gewächshäuser",
+        "location": "Magdeburg"
+      },
+      {
+        "date": "2023-10-21",
+        "venue": "Station Endlos",
+        "location": "Halle"
+      },
+      {
+        "date": "2023-08-18",
+        "venue": "Rooftop Party@ Villa Palma",
+        "location": "Sardinia"
+      }
+    ]
+  },
+  "changeAndCreate": {
+    "brand": "Change & Create",
+    "website": "https://www.changeandcreate.de",
+    "description": "A platform focused on personal development through wellness retreats, self-care practices, and health consulting.",
+    "offerings": [
+      "Wellness retreats (e.g., in Madeira, Mallorca)",
+      "Workshops on self-love and routine building",
+      "Mindfulness and physical activities (yoga, meditation, hiking)"
+    ],
+    "goals": [
+      "Empower individuals to improve their lives through scientific knowledge and practical coaching",
+      "Promote self-reflection and mental well-being"
+    ],
+    "podcastInfo": {
+      "name": "Change & Create Podcast",
+      "platform": "Podchaser",
+      "startDate": "November 2022",
+      "topics": [
+        "Psychology",
+        "Biohacking",
+        "Nutrition",
+        "Mindfulness",
+        "Self-improvement"
+      ],
+      "exampleEpisodes": [
+        "Dopamine Control",
+        "Work and Learn like a Pro"
+      ]
+    }
+  },
+  "philosophy": {
+    "approach": "Holistic health and well-being",
+    "values": [
+      "Mind-body connection",
+      "Personal empowerment",
+      "Breaking free from personal limitations",
+      "Promoting mental and physical health"
+    ],
+    "musicPhilosophy": "Music is more than just tunes; it's a way to connect deeply with our emotions and with each other.",
+    "setDescription": "Her sets are more than a random collection of tracks. MARADOCA takes you on a journey to freedom. With increasing energy and speed, she helps you break free from genre limitations.",
+    "audienceInteraction": {
+      "engagement": [
+        "Interactive performances at retreats and festivals",
+        "Music that encourages introspection and emotional connection",
+        "Uniting a diverse audience to feel, dance, and connect"
+      ],
+      "goal": "To use music as a medium to explore emotions, promote well-being, and connect with others on a deeper level."
+    }
+  },
+  "socialMedia": {
+    "instagram": "@change.and.create",
+    "soundcloud": "maradoca"
+  },
+  "artistDescription": "MARADOCA, a rising artist based in Leipzig, Germany, has burst onto the scene with a fresh perspective. Mixing melodic, tropical, and cosmic elements in a progressive flow, she weaves stories of deep feelings, creating vibes that resonate straight from her soul. For MARADOCA, music is more than just tunes; it's a way to connect deeply with our emotions and with each other.",
+  "personalMotto": "I like NUBES. ☁️"
+}
