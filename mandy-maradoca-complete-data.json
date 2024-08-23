@@ -4,12 +4,7 @@
     "professionalAlias": "Maradoca",
     "age": 30,
     "location": "Leipzig, Germany",
-    "languages": [
-      "German",
-      "English",
-      "Spanish",
-      "Learning French"
-    ]
+    "languages": ["German", "English", "Spanish", "Learning French"]
   },
   "education": {
     "degrees": [
@@ -55,13 +50,7 @@
   },
   "musicCareer": {
     "djName": "MARADOCA",
-    "genres": [
-      "Melodic House",
-      "Techno",
-      "Progressive",
-      "Afrohouse",
-      "Trance"
-    ],
+    "genres": ["Melodic House", "Techno", "Progressive", "Afrohouse", "Trance"],
     "performanceTypes": [
       "Festivals",
       "Nightclubs",
@@ -71,11 +60,7 @@
     "goal": "To create a journey of freedom through music and emotional connection",
     "musicStyle": {
       "description": "Mixing melodic, tropical, and cosmic elements in a progressive flow",
-      "influences": [
-        "Melodic techno",
-        "Progressive house",
-        "Cosmic sounds"
-      ]
+      "influences": ["Melodic techno", "Progressive house", "Cosmic sounds"]
     },
     "soundcloudInfo": {
       "username": "MARADOCA",
@@ -210,10 +195,7 @@
         "Mindfulness",
         "Self-improvement"
       ],
-      "exampleEpisodes": [
-        "Dopamine Control",
-        "Work and Learn like a Pro"
-      ]
+      "exampleEpisodes": ["Dopamine Control", "Work and Learn like a Pro"]
     }
   },
   "philosophy": {

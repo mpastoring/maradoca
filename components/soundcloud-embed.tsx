@@ -13,7 +13,7 @@ const SoundCloudEmbed = ({ url, title }: SoundCloudEmbedProps) => {
         frameBorder="no"
         allow="autoplay"
         src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
-          url
+          url,
         )}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`}
       ></iframe>
       <div className="text-xs text-gray-500 mt-2">
