@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
 
 const Cloud = ({ delay = 0, duration = 20, ...props }) => (
   <motion.div
@@ -31,7 +30,7 @@ const Cloud = ({ delay = 0, duration = 20, ...props }) => (
       height="60"
       viewBox="0 0 100 60"
       fill="currentColor"
-      className="text-white dark:text-gray-800"
+      className="text-blue-100 dark:text-blue-900"
     >
       <path d="M0 30 Q25 0 50 30 T100 30 Q75 60 50 30 T0 30" />
     </svg>
@@ -39,34 +38,8 @@ const Cloud = ({ delay = 0, duration = 20, ...props }) => (
 );
 
 export default function CloudBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const createCloud = () => {
-      const cloud = document.createElement("div");
-      cloud.style.position = "absolute";
-      cloud.style.left = `${Math.random() * 100}%`;
-      cloud.style.top = `${Math.random() * 100}%`;
-      container.appendChild(cloud);
-
-      return cloud;
-    };
-
-    const clouds = Array.from({ length: 10 }, createCloud);
-
-    return () => {
-      clouds.forEach((cloud) => cloud.remove());
-    };
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
-    >
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
       <Cloud delay={0} duration={25} style={{ top: "10%", left: "5%" }} />
       <Cloud delay={2} duration={30} style={{ top: "30%", left: "25%" }} />
       <Cloud delay={4} duration={22} style={{ top: "50%", left: "45%" }} />
