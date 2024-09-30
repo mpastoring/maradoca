@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body className={cn(fontSans.variable, "h-[100dvh] overflow-hidden")}>
+        {children}
+      </body>
     </html>
   );
 }

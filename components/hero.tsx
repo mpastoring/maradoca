@@ -12,12 +12,11 @@ export default function Hero() {
   return (
     <div
       className={cn(
-        "h-screen w-full overflow-hidden bg-black text-white",
+        "h-full w-full overflow-hidden  bg-black text-white",
         roboto.className,
       )}
     >
       <BackgroundVideo />
-
       <Content orbitronClassName={orbitron.className} />
     </div>
   );
