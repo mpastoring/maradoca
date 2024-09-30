@@ -20,7 +20,6 @@ export default function Hero() {
   }, []);
 
   const toggleMute = () => {
-    console.log("toggleMute");
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
@@ -31,7 +30,7 @@ export default function Hero() {
     <div
       className={cn(
         "relative h-screen w-full overflow-hidden bg-black text-white",
-        roboto.className
+        roboto.className,
       )}
     >
       <BackgroundVideo
