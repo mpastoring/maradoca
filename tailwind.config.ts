@@ -72,14 +72,19 @@ const config = {
           to: { height: "0" },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        flash: {
+          "0%, 100%": { opacity: "0" },
+          "50%": { opacity: "0.05" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        float: 'float 6s ease-in-out infinite',
+        float: "float 6s ease-in-out infinite",
+        flash: "flash 480ms ease-in-out infinite", // 480ms for 125 BPM (60000ms / 125 = 480ms per beat)
       },
     },
   },

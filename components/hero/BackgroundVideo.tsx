@@ -4,7 +4,7 @@ import "next-cloudinary/dist/cld-video-player.css";
 const BackgroundVideo = () => {
   return (
     <>
-      <div className="hidden sm:block absolute h-full bg-black opacity-25 top-0 left-0 w-full">
+      <div className="hidden sm:block absolute inset-0 overflow-hidden">
         <CldVideoPlayer
           id="hero-video-desktop"
           width="1920"
@@ -17,7 +17,7 @@ const BackgroundVideo = () => {
           playsinline
         />
       </div>
-      <div className="sm:hidden  absolute h-full bg-black opacity-25 top-0 left-0 w-full">
+      <div className="sm:hidden absolute inset-0 overflow-hidden">
         <CldVideoPlayer
           id="hero-video-mobile"
           width="1080"
@@ -30,6 +30,8 @@ const BackgroundVideo = () => {
           playsinline
         />
       </div>
+      <div className="absolute inset-0 bg-black opacity-25" />
+      <div className="absolute inset-0 bg-white opacity-0 animate-flash" />
     </>
   );
 };
