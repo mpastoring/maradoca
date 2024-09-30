@@ -1,38 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Orbitron, Roboto } from "next/font/google";
+import { useEffect, useRef, useState } from "react";
+import BackgroundVideo from "./hero/BackgroundVideo";
+import Content from "./hero/Content";
+import Overlay from "./hero/Overlay";
 
-type HeroProps = {
-  playfairFont: string;
-};
+const orbitron = Orbitron({ subsets: ["latin"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["300", "400", "700"] });
 
-export default function Hero({ playfairFont }: HeroProps) {
+export default function Hero() {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    setIsVideoLoaded(true);
+  }, []);
+
+  const toggleMute = () => {
+    console.log("toggleMute");
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
-    <div className="text-center py-20">
-      <motion.h1
-        className={`text-8xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 ${playfairFont}`}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, type: "spring" }}
-      >
-        MARADOCA
-      </motion.h1>
-      <motion.p
-        className="text-2xl mb-8 text-gray-300"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        Where science meets sound in ethereal journeys
-      </motion.p>
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="text-5xl"
-      >
-        ☁️
-      </motion.div>
+    <div
+      className={cn(
+        "relative h-screen w-full overflow-hidden bg-black text-white",
+        roboto.className
+      )}
+    >
+      <BackgroundVideo
+        ref={videoRef}
+        isLoaded={isVideoLoaded}
+        isMuted={isMuted}
+      />
+      <Overlay />
+
+      <Content
+        orbitronClassName={orbitron.className}
+        toggleMute={toggleMute}
+        isMuted={isMuted}
+      />
     </div>
   );
 }

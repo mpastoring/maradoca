@@ -1,6 +1,4 @@
-import AbstractBackground from "@/components/abstract-background";
 import Hero from "@/components/hero";
-import MusicPlayer from "@/components/music-player";
 import { Montserrat, Playfair_Display } from "next/font/google";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -17,7 +15,7 @@ type Track = {
 
 async function getSoundCloudData(): Promise<{ collection: Track[] }> {
   const res = await fetch(
-    "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=5&linked_partitioning=1&app_version=1726736933&app_locale=en"
+    "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=5&linked_partitioning=1&app_version=1726736933&app_locale=en",
   );
 
   if (!res.ok) {
@@ -30,14 +28,8 @@ export default async function Home() {
   const { collection: tracks } = await getSoundCloudData();
 
   return (
-    <main
-      className={`min-h-screen ${montserrat.className} bg-gradient-to-br from-gray-950 to-black`}
-    >
-      <AbstractBackground />
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <Hero playfairFont={playfair.className} />
-        <MusicPlayer tracks={tracks} />
-      </div>
+    <main>
+      <Hero />
     </main>
   );
 }
