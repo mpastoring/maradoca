@@ -1,18 +1,11 @@
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
 import SocialLinks from "./SocialLinks";
 
 type ContentProps = {
   orbitronClassName: string;
-  toggleMute: () => void;
-  isMuted: boolean;
 };
 
-export default function Content({
-  orbitronClassName,
-  toggleMute,
-  isMuted,
-}: ContentProps) {
+export default function Content({ orbitronClassName }: ContentProps) {
   return (
     <div className="relative z-10 flex h-full flex-col items-center justify-center p-4 text-center">
       <h1
@@ -28,9 +21,6 @@ export default function Content({
         sounds.
       </p>
       <SocialLinks />
-      <Button onClick={toggleMute} className="absolute bottom-4 right-4 z-10">
-        {isMuted ? "Unmute" : "Mute"}
-      </Button>
     </div>
   );
 }

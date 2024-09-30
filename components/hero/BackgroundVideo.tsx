@@ -1,30 +1,21 @@
-import { forwardRef } from 'react';
+import { CldVideoPlayer } from "next-cloudinary";
+import "next-cloudinary/dist/cld-video-player.css";
 
-type BackgroundVideoProps = {
-  isLoaded: boolean;
-  isMuted: boolean;
-};
-
-const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps>(
-  ({ isLoaded, isMuted }, ref) => {
-    if (!isLoaded) return null;
-
-    return (
-      <video
-        ref={ref}
-        autoPlay
+const BackgroundVideo = () => {
+  return (
+    <div className="absolute bg-black opacity-25 top-0 left-0 w-full h-full">
+      <CldVideoPlayer
+        id="hero-video"
+        width="1920"
+        height="1080"
+        src="https://res.cloudinary.com/dgydlubmz/video/upload/v1727725886/maradoca/2014_09_27_charles-bronson.mp4"
+        controls
+        muted
         loop
-        muted={isMuted}
-        playsInline
-        className="absolute inset-0 h-full w-full object-cover opacity-70"
-      >
-        <source src="/hero-video.MP4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    );
-  }
-);
-
-BackgroundVideo.displayName = 'BackgroundVideo';
+        autoplay
+      />
+    </div>
+  );
+};
 
 export default BackgroundVideo;
