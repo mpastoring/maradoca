@@ -5,7 +5,7 @@ export default function SocialLinks() {
   return (
     <div className="flex space-x-6">
       <SocialLink
-        href="https://www.instagram.com/change.and.create"
+        href="https://www.instagram.com/maradoca"
         icon={Instagram}
         label="Instagram"
       />
@@ -16,7 +16,7 @@ export default function SocialLinks() {
         isImage
       />
       <SocialLink
-        href="mailto:contact@maradoca.com"
+        href="mailto:maradoca.music@gmail.com"
         icon={Mail}
         label="Email"
       />

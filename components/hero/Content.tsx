@@ -10,7 +10,7 @@ export default function Content({ orbitronClassName }: ContentProps) {
     <div className="relative z-10 flex h-full flex-col items-center justify-center p-4 text-center">
       <h1
         className={cn(
-          "mb-4 text-6xl font-bold tracking-wider sm:text-7xl lg:text-8xl",
+          "mb-4 text-5xl font-bold tracking-wider sm:text-6xl md:text-7xl lg:text-8xl",
           orbitronClassName
         )}
       >
