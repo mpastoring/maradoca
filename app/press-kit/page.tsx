@@ -14,7 +14,12 @@ import {
   MusicIcon,
   PlayIcon,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+
+const DynamicMap = dynamic(() => import("@/components/PerformanceMap"), {
+  ssr: false,
+});
 
 type Track = {
   id: number;
@@ -24,6 +29,14 @@ type Track = {
   playback_count: number;
   likes_count: number;
   description: string;
+  artwork_url: string;
+};
+
+export type Performance = {
+  date: string;
+  venue: string;
+  location: string;
+  isPast: boolean;
 };
 
 function cleanDescription(description: string): string {
@@ -48,28 +61,187 @@ function cleanDescription(description: string): string {
 
 export default async function Component() {
   const res = await fetch(
-    "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=5&linked_partitioning=1&app_version=1726736933&app_locale=en"
+    "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=50&linked_partitioning=1&app_version=1726736933&app_locale=en"
   );
   const responseJson: { collection: Track[] } = await res.json();
 
-  const tracks = responseJson.collection.map((track) => ({
-    id: track.id,
-    title: track.title,
-    permalink_url: track.permalink_url,
-    duration: track.duration,
-    playback_count: track.playback_count,
-    likes_count: track.likes_count,
-    description: cleanDescription(track.description),
-  }));
+  const tracks = responseJson.collection
+    .map((track) => ({
+      id: track.id,
+      title: track.title,
+      permalink_url: track.permalink_url,
+      duration: track.duration,
+      playback_count: track.playback_count,
+      likes_count: track.likes_count,
+      description: cleanDescription(track.description),
+      artwork_url: track.artwork_url,
+    }))
+    .sort((a, b) => b.playback_count - a.playback_count)
+    .slice(0, 5);
+
+  const performances: Performance[] = [
+    {
+      date: "2024-09-27",
+      venue: "Charles Bronson",
+      location: "Halle",
+      isPast: false,
+    },
+    {
+      date: "2024-10-04",
+      venue: "Elsterartig",
+      location: "Leipzig",
+      isPast: false,
+    },
+    { date: "2024-10-30", venue: "tba <3", location: "Leipzig", isPast: false },
+    {
+      date: "2024-10-31",
+      venue: "Argentina Tour",
+      location: "Argentina",
+      isPast: false,
+    },
+    {
+      date: "2024-08-14",
+      venue: "Insel der Jugend",
+      location: "Magdeburg",
+      isPast: true,
+    },
+    {
+      date: "2024-08-10",
+      venue: "Wilde Möhre I FLINTA* DJ Workshop Equalize",
+      location: "Unknown",
+      isPast: true,
+    },
+    {
+      date: "2024-08-02",
+      venue: "NatureOne Camp",
+      location: "Unknown",
+      isPast: true,
+    },
+    {
+      date: "2024-07-26",
+      venue: "H12KK Festival",
+      location: "Unknown",
+      isPast: true,
+    },
+    {
+      date: "2024-07-10",
+      venue: "Ilses Erika",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2024-05-25",
+      venue: "Lisbeth Lauscht",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2024-05-03",
+      venue: "Charles Bronson",
+      location: "Halle (Saale)",
+      isPast: true,
+    },
+    {
+      date: "2024-04-19",
+      venue: "The GardenLabs",
+      location: "Portugal",
+      isPast: true,
+    },
+    {
+      date: "2024-03-08",
+      venue: "Kulturlounge",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2024-03-02",
+      venue: "Trash",
+      location: "Gera",
+      isPast: true,
+    },
+    {
+      date: "2024-02-24",
+      venue: "NousNous",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2024-01-12",
+      venue: "NousNous",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2023-10-28",
+      venue: "Gewächshäuser",
+      location: "Magdeburg",
+      isPast: true,
+    },
+    {
+      date: "2023-10-27",
+      venue: "Garage Ost",
+      location: "Leipzig",
+      isPast: true,
+    },
+    {
+      date: "2023-10-21",
+      venue: "Station Endlos",
+      location: "Halle",
+      isPast: true,
+    },
+    {
+      date: "2023-10-14",
+      venue: "Tramuntana Flow",
+      location: "Mallorca",
+      isPast: true,
+    },
+    {
+      date: "2023-10-01",
+      venue: "Luises Garten",
+      location: "Magdeburg",
+      isPast: true,
+    },
+    {
+      date: "2023-09-13",
+      venue: "Rooftop Party@ Villa Palma",
+      location: "Sardinia",
+      isPast: true,
+    },
+    {
+      date: "2023-09-06",
+      venue: "Rooftop Party@ Villa Palma",
+      location: "Sardinia",
+      isPast: true,
+    },
+    {
+      date: "2023-07-28",
+      venue: "H12KK Festival",
+      location: "Unknown",
+      isPast: true,
+    },
+    {
+      date: "2023-05-17",
+      venue: "Trash",
+      location: "Gera",
+      isPast: true,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto px-4 py-12">
         <header className="mb-16 text-center">
-          <h1 className="text-5xl font-bold mb-4 text-gray-100">DJ MARADOCA</h1>
-          <p className="text-xl text-gray-300">
-            Mandy Rauschner | Leipzig, Germany
+          <h1 className="text-5xl font-bold mb-4 text-gray-100">MARADOCA</h1>
+          {/* <p className="text-xl text-gray-300">📍Leipzig | GERMANY</p>
+          <p className="text-lg text-gray-300 mt-2">
+            Tropical I Cosmic I Deep I Progressive &lt;3
           </p>
+          <p className="text-lg text-gray-300 mt-2">
+            Music for Body, Mind & Soul
+          </p>
+          <p className="text-lg text-gray-300 mt-2">
+            Join me on my journey to FREEDOM!
+          </p> */}
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
@@ -79,12 +251,14 @@ export default async function Component() {
                 About the Artist
               </h2>
               <p className="text-lg text-gray-300 leading-relaxed">
-                MARADOCA is an emerging talent in the electronic music scene,
-                based in Leipzig, Germany. Her unique approach blends melodic,
-                tropical, and cosmic elements into progressive journeys that
-                deeply resonate with audiences. MARADOCA&apos;s music transcends
-                mere sound, offering an emotional expedition through carefully
-                crafted soundscapes.
+                MARADOCA, a rising artist based in Leipzig, Germany, delivers a
+                captivating blend of afro/melodic house, cosmic/psy elements,
+                and driving Soultechno. Her sets take you on a progressive
+                journey, balancing tropical daytime vibes with the deep,
+                trance-like energy of the night. With a seamless flow of
+                emotional depth and epic vocals, MARADOCA&apos;s music
+                isn&apos;t just about tracks—it&apos;s a transformative
+                experience.
               </p>
             </div>
             <div>
@@ -94,10 +268,10 @@ export default async function Component() {
               <div className="flex flex-wrap gap-2">
                 {[
                   "Melodic House & Techno",
-                  "Techno",
-                  "Progressive",
                   "Afrohouse",
-                  "Trance",
+                  "Progressive",
+                  "Cosmic",
+                  "Deep",
                 ].map((genre) => (
                   <Badge
                     key={genre}
@@ -122,43 +296,8 @@ export default async function Component() {
           </div>
         </div>
 
-        <div className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
-            Featured Playlist
-          </h2>
-          <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-            <iframe
-              width="100%"
-              height="300"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1799944080&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
-            ></iframe>
-            <div className="text-xs text-gray-400 mt-2">
-              <a
-                href="https://soundcloud.com/maradoca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                MARADOCA
-              </a>{" "}
-              ·
-              <a
-                href="https://soundcloud.com/maradoca/sets/progressive-i-melodic-house"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                Progressive I Melodic House & Techno (~125bpm)
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card className="bg-gray-800 shadow-md">
+          <Card className="bg-gray-800 shadow-md md:col-span-2 row-span-2">
             <CardHeader>
               <CardTitle className="flex items-center text-gray-100">
                 <MusicIcon className="mr-2" />
@@ -168,31 +307,42 @@ export default async function Component() {
             <CardContent>
               <ul className="space-y-4 text-gray-300">
                 {tracks.map((track) => (
-                  <li key={track.id} className="flex flex-col">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <a
-                            href={track.permalink_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-medium hover:text-gray-100 transition-colors"
-                          >
-                            {track.title}
-                          </a>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-xs bg-gray-700 text-gray-200">
-                          <p>{track.description}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <div className="flex items-center text-sm text-gray-400 mt-1">
-                      <PlayIcon className="h-4 w-4 mr-1" />
-                      <span className="mr-3">
-                        {track.playback_count.toLocaleString()}
-                      </span>
-                      <HeartIcon className="h-4 w-4 mr-1" />
-                      <span>{track.likes_count.toLocaleString()}</span>
+                  <li key={track.id} className="flex items-center">
+                    <div className="w-16 h-16 mr-4 relative">
+                      <Image
+                        src={track.artwork_url || "/default-track-image.jpg"}
+                        alt={`${track.title} artwork`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded"
+                      />
+                    </div>
+                    <div className="flex-grow">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <a
+                              href={track.permalink_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium hover:text-gray-100 transition-colors"
+                            >
+                              {track.title}
+                            </a>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs bg-gray-700 text-gray-200">
+                            <p>{track.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <div className="flex items-center text-sm text-gray-400 mt-1">
+                        <PlayIcon className="h-4 w-4 mr-1" />
+                        <span className="mr-3">
+                          {track.playback_count.toLocaleString()}
+                        </span>
+                        <HeartIcon className="h-4 w-4 mr-1" />
+                        <span>{track.likes_count.toLocaleString()}</span>
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -212,7 +362,25 @@ export default async function Component() {
                 <li className="flex items-center">
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <span>
-                    <strong>14.08.2024:</strong> Insel der Jugend, Magdeburg
+                    <strong>27.09.2024:</strong> Charles Bronson, Halle | L300
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <span>
+                    <strong>04.10.2024:</strong> Elsterartig, Leipzig
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <span>
+                    <strong>30.10.2024:</strong> tba &lt;3, Leipzig
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <span>
+                    <strong>31.10.-17.12.2024:</strong> Argentina
                   </span>
                 </li>
               </ul>
@@ -260,45 +428,163 @@ export default async function Component() {
           </Card>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-8 shadow-md">
+        {/* <div className="mb-16">
+          <h2 className="text-3xl font-semibold mb-6 text-gray-100">
+            Performance Map
+          </h2>
+          <div className="h-[400px] bg-gray-800 rounded-lg overflow-hidden">
+            <Map performances={performances} />
+          </div>
+        </div> */}
+
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
+        <div className="bg-gray-800 rounded-lg p-8 shadow-md max-h-[600px] overflow-y-auto">
           <h2 className="text-3xl font-semibold mb-6 text-gray-100">
             Artist Biography
           </h2>
           <div className="prose prose-lg max-w-none text-gray-300">
             <p>
-              Mandy Rauschner, known professionally as MARADOCA, is a
-              multifaceted artist who brings a unique perspective to the
-              electronic music scene. With a Master&apos;s degree in Molecular
-              Medicine and a pending PhD in Cancer Research, MARADOCA infuses
-              her scientific background into her musical creations, resulting in
-              a distinctive and analytical approach to sound.
+              MARADOCA, a rising artist based in Leipzig, Germany, delivers a
+              captivating blend of afro/melodic house, cosmic/psy elements, and
+              driving Soultechno. Her sets take you on a progressive journey,
+              balancing tropical daytime vibes with the deep, trance-like energy
+              of the night. With a seamless flow of emotional depth and epic
+              vocals, MARADOCA&apos;s music isn&apos;t just about
+              tracks—it&apos;s a transformative experience.
             </p>
             <p>
-              As the founder of Change & Create, MARADOCA goes beyond creating
-              music; she crafts immersive experiences. Her sets are meticulously
-              curated journeys that transcend traditional genre boundaries,
-              inviting listeners to explore the depths of their emotions and
-              break free from conventional limitations.
+              From conscious dance events to nightclubs, her &quot;Ecstatic
+              Rave&quot; creates a powerful connection on the dancefloor,
+              uniting people to feel, move, and break free from genre
+              boundaries. Whether it&apos;s an intimate retreat or a late-night
+              it&apos;s an intimate retreat or a late-night festival, MARADOCA
+              brings a sound that&apos;s unforgettable.
             </p>
             <p>
               MARADOCA&apos;s philosophy is deeply rooted in the holistic
-              connection between mind and body. Whether she&apos;s headlining a
-              vibrant festival, setting the atmosphere in an intimate nightclub,
-              or guiding participants through a transformative wellness retreat,
-              her mission remains consistent: to harness the power of music as a
-              catalyst for emotional exploration, personal growth, and profound
-              human connection.
+              connection between mind and body. Her mission is to harness the
+              power of music as a catalyst for emotional exploration, personal
+              growth, and profound human connection.
             </p>
             <p>
-              Blending melodic house, techno, and progressive elements with
-              tropical and cosmic influences, MARADOCA doesn&apos;t simply play
-              tracks—she weaves narratives. Each set is a carefully constructed
-              progression that builds and evolves, taking the audience on a
-              sonic journey that resonates long after the final note fades away.
+              Join MARADOCA on her journey to FREEDOM! Her music is crafted for
+              Body, Mind & Soul, inviting listeners to explore the depths of
+              their emotions and break free from conventional limitations.
             </p>
           </div>
         </div>
+
+        {/* <div className="bg-gray-800 rounded-lg p-8 shadow-md h-[600px] flex flex-col">
+            <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
+              Past Performances
+            </h2>
+            <div className="flex-grow overflow-y-auto">
+              <ul className="space-y-2 text-gray-300">
+                <li>
+                  <s>14.08.2024 Insel der Jugend, Magdeburg</s>
+                </li>
+                <li>
+                  <s>10.08.2024 Wilde Möhre I FLINTA* DJ Workshop Equalize</s>
+                </li>
+                <li>
+                  <s>02.08.2024 NatureOne Camp</s>
+                </li>
+                <li>
+                  <s>26.07.2024 H12KK Festival</s>
+                </li>
+                <li>
+                  <s>10.07.2024 Ilses Erika, Leipzig</s>
+                </li>
+                <li>
+                  <s>25.05.2024 Lisbeth Lauscht, Leipzig</s>
+                </li>
+                <li>
+                  <s>03.05.2024 Charles Bronson, Halle (Saale) I L300</s>
+                </li>
+                <li>
+                  <s>19.04.2024 The GardenLabs, Portugal</s>
+                </li>
+                <li>
+                  <s>08.03.2024 Kulturlounge, Leipzig I Equalize</s>
+                </li>
+                <li>
+                  <s>
+                    02.03.2024 Trash, Gera I Melodienschmiede Contest (Platz2)
+                  </s>
+                </li>
+                <li>
+                  <s>24.02.2024 NousNous, Leipzig</s>
+                </li>
+                <li>
+                  <s>12.01.2024 NousNous, Leipzig</s>
+                </li>
+                <li>
+                  <s>28.10.2023 Gewächshäuser, Magdeburg</s>
+                </li>
+                <li>
+                  <s>27.10.2023 Garage Ost, Leipzig</s>
+                </li>
+                <li>
+                  <s>21.10.2023 Station Endlos, Halle (private)</s>
+                </li>
+                <li>
+                  <s>14.10.2023 Tramuntana Flow, Mallorca (Retreat)</s>
+                </li>
+                <li>
+                  <s>01.10.2023 Luises Garten, Magdeburg</s>
+                </li>
+                <li>
+                  <s>13.09.2023 Rooftop Party@ Villa Palma, Sardinia</s>
+                </li>
+                <li>
+                  <s>06.09.2023 Rooftop Party@ Villa Palma, Sardinia</s>
+                </li>
+                <li>
+                  <s>28.07.2023 H12KK Festival</s>
+                </li>
+                <li>
+                  <s>17.05.2023 Trash, Gera</s>
+                </li>
+              </ul>
+            </div>
+          </div> */}
+        {/* 
+<div className="mb-16">
+          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
+            Featured Playlist
+          </h2>
+          <div className="bg-gray-800 rounded-lg p-4 shadow-md">
+            <iframe
+              width="100%"
+              height="300"
+              scrolling="no"
+              frameBorder="no"
+              allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1799944080&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            ></iframe>
+            <div className="text-xs text-gray-400 mt-2">
+              <a
+                href="https://soundcloud.com/maradoca"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                MARADOCA
+              </a>{" "}
+              ·
+              <a
+                href="https://soundcloud.com/maradoca/sets/progressive-i-melodic-house"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                Progressive I Melodic House & Techno (~125bpm)
+              </a>
+            </div>
+          </div>
+        </div> */}
       </div>
     </div>
+    // </div>
   );
 }
