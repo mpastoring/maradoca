@@ -1,6 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 type Performance = {
   date: string;
@@ -14,14 +14,18 @@ type PerformanceMapProps = {
 };
 
 const icon = L.icon({
-  iconUrl: '/marker-icon.png',
+  iconUrl: "/marker-icon.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
 
 export default function PerformanceMap({ performances }: PerformanceMapProps) {
   return (
-    <MapContainer center={[51.3397, 12.3731]} zoom={5} style={{ height: '100%', width: '100%' }}>
+    <MapContainer
+      center={[51.3397, 12.3731]}
+      zoom={5}
+      style={{ height: "100%", width: "100%" }}
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -33,7 +37,9 @@ export default function PerformanceMap({ performances }: PerformanceMapProps) {
           icon={icon}
         >
           <Popup>
-            <strong>{new Date(performance.date).toLocaleDateString('de-DE')}</strong>
+            <strong>
+              {new Date(performance.date).toLocaleDateString("de-DE")}
+            </strong>
             <br />
             {performance.venue}, {performance.location}
           </Popup>
