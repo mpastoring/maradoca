@@ -22,9 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(fontSans.variable, "h-[100dvh] overflow-hidden")}>
-        {children}
-      </body>
+      <body className={cn(fontSans.variable, "h-[100dvh]")}>{children}</body>
     </html>
   );
 }
