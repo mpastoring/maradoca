@@ -1,4 +1,4 @@
-import { FileText, Instagram, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import SocialLink from "./SocialLink";
 
 export default function SocialLinks() {
@@ -20,7 +20,6 @@ export default function SocialLinks() {
         icon={Mail}
         label="Email"
       />
-      <SocialLink href="/press-kit" icon={FileText} label="Press Kit" />
     </div>
   );
 }

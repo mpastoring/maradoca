@@ -1,7 +1,11 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   CalendarIcon,
   GlobeIcon,
@@ -11,7 +15,6 @@ import {
   PlayIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 type Track = {
   id: number;
@@ -20,28 +23,51 @@ type Track = {
   duration: number;
   playback_count: number;
   likes_count: number;
+  description: string;
 };
 
-async function getSoundCloudData(): Promise<{ collection: Track[] }> {
+function cleanDescription(description: string): string {
+  if (!description) return "No description available";
+
+  const excludePatterns = [/Track:?/i, /Tracks:?/i, /TRACK IDs:?/i];
+  let cleanedDescription = description;
+
+  for (const pattern of excludePatterns) {
+    const match = cleanedDescription.match(pattern);
+    if (match && match.index !== undefined) {
+      if (pattern.source.includes("TRACK IDs") || match[0].charAt(0) === "T") {
+        cleanedDescription = cleanedDescription
+          .substring(0, match.index)
+          .trim();
+      }
+    }
+  }
+
+  return cleanedDescription || "No description available";
+}
+
+export default async function Component() {
   const res = await fetch(
     "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=5&linked_partitioning=1&app_version=1726736933&app_locale=en"
   );
-  return res.json();
-}
+  const responseJson: { collection: Track[] } = await res.json();
 
-export default function Component() {
-  const [tracks, setTracks] = useState<Track[]>([]);
-
-  useEffect(() => {
-    getSoundCloudData().then((data) => setTracks(data.collection));
-  }, []);
+  const tracks = responseJson.collection.map((track) => ({
+    id: track.id,
+    title: track.title,
+    permalink_url: track.permalink_url,
+    duration: track.duration,
+    playback_count: track.playback_count,
+    likes_count: track.likes_count,
+    description: cleanDescription(track.description),
+  }));
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="container mx-auto px-4 py-12">
         <header className="mb-16 text-center">
-          <h1 className="text-5xl font-bold mb-4 text-gray-900">DJ MARADOCA</h1>
-          <p className="text-xl text-gray-600">
+          <h1 className="text-5xl font-bold mb-4 text-gray-100">DJ MARADOCA</h1>
+          <p className="text-xl text-gray-300">
             Mandy Rauschner | Leipzig, Germany
           </p>
         </header>
@@ -49,10 +75,10 @@ export default function Component() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-semibold mb-4 text-gray-800">
+              <h2 className="text-3xl font-semibold mb-4 text-gray-100">
                 About the Artist
               </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-300 leading-relaxed">
                 MARADOCA is an emerging talent in the electronic music scene,
                 based in Leipzig, Germany. Her unique approach blends melodic,
                 tropical, and cosmic elements into progressive journeys that
@@ -62,12 +88,12 @@ export default function Component() {
               </p>
             </div>
             <div>
-              <h3 className="text-2xl font-semibold mb-3 text-gray-800">
+              <h3 className="text-2xl font-semibold mb-3 text-gray-100">
                 Signature Sounds
               </h3>
               <div className="flex flex-wrap gap-2">
                 {[
-                  "Melodic House",
+                  "Melodic House & Techno",
                   "Techno",
                   "Progressive",
                   "Afrohouse",
@@ -76,7 +102,7 @@ export default function Component() {
                   <Badge
                     key={genre}
                     variant="secondary"
-                    className="bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    className="bg-gray-700 text-gray-200 hover:bg-gray-600"
                   >
                     {genre}
                   </Badge>
@@ -88,7 +114,7 @@ export default function Component() {
             <Image
               src="/maradoca-portrait.jpg"
               alt="DJ MARADOCA performing"
-              layout="fill"
+              fill
               objectFit="cover"
               className="transition-transform duration-300 hover:scale-105"
               style={{ objectPosition: "100% 35%" }}
@@ -97,10 +123,10 @@ export default function Component() {
         </div>
 
         <div className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">
+          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
             Featured Playlist
           </h2>
-          <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="bg-gray-800 rounded-lg p-4 shadow-md">
             <iframe
               width="100%"
               height="300"
@@ -109,7 +135,7 @@ export default function Component() {
               allow="autoplay"
               src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1799944080&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
             ></iframe>
-            <div className="text-xs text-gray-500 mt-2">
+            <div className="text-xs text-gray-400 mt-2">
               <a
                 href="https://soundcloud.com/maradoca"
                 target="_blank"
@@ -132,26 +158,35 @@ export default function Component() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card className="bg-white shadow-md">
+          <Card className="bg-gray-800 shadow-md">
             <CardHeader>
-              <CardTitle className="flex items-center text-gray-800">
+              <CardTitle className="flex items-center text-gray-100">
                 <MusicIcon className="mr-2" />
                 Top Tracks
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-4 text-gray-600">
+              <ul className="space-y-4 text-gray-300">
                 {tracks.map((track) => (
                   <li key={track.id} className="flex flex-col">
-                    <a
-                      href={track.permalink_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium hover:text-gray-900 transition-colors"
-                    >
-                      {track.title}
-                    </a>
-                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <a
+                            href={track.permalink_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium hover:text-gray-100 transition-colors"
+                          >
+                            {track.title}
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs bg-gray-700 text-gray-200">
+                          <p>{track.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <div className="flex items-center text-sm text-gray-400 mt-1">
                       <PlayIcon className="h-4 w-4 mr-1" />
                       <span className="mr-3">
                         {track.playback_count.toLocaleString()}
@@ -165,15 +200,15 @@ export default function Component() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-md">
+          <Card className="bg-gray-800 shadow-md">
             <CardHeader>
-              <CardTitle className="flex items-center text-gray-800">
+              <CardTitle className="flex items-center text-gray-100">
                 <CalendarIcon className="mr-2" />
                 Upcoming Gigs
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-300">
                 <li className="flex items-center">
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <span>
@@ -184,37 +219,37 @@ export default function Component() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-md">
+          <Card className="bg-gray-800 shadow-md">
             <CardHeader>
-              <CardTitle className="flex items-center text-gray-800">
+              <CardTitle className="flex items-center text-gray-100">
                 <GlobeIcon className="mr-2" />
                 Connect
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-300">
                 <li>
                   <a
-                    href="https://www.changeandcreate.de"
-                    className="flex items-center hover:text-gray-900 transition-colors"
+                    href="https://www.maradoca.com"
+                    className="flex items-center hover:text-gray-100 transition-colors"
                   >
                     <GlobeIcon className="mr-2 h-4 w-4" />
-                    changeandcreate.de
+                    maradoca.com
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://www.instagram.com/change.and.create"
-                    className="flex items-center hover:text-gray-900 transition-colors"
+                    href="https://www.instagram.com/maradoca"
+                    className="flex items-center hover:text-gray-100 transition-colors"
                   >
                     <InstagramIcon className="mr-2 h-4 w-4" />
-                    @change.and.create
+                    @maradoca
                   </a>
                 </li>
                 <li>
                   <a
                     href="https://soundcloud.com/maradoca"
-                    className="flex items-center hover:text-gray-900 transition-colors"
+                    className="flex items-center hover:text-gray-100 transition-colors"
                   >
                     <MusicIcon className="mr-2 h-4 w-4" />
                     soundcloud.com/maradoca
@@ -225,11 +260,11 @@ export default function Component() {
           </Card>
         </div>
 
-        <div className="bg-white rounded-lg p-8 shadow-md">
-          <h2 className="text-3xl font-semibold mb-6 text-gray-800">
+        <div className="bg-gray-800 rounded-lg p-8 shadow-md">
+          <h2 className="text-3xl font-semibold mb-6 text-gray-100">
             Artist Biography
           </h2>
-          <div className="prose prose-lg max-w-none text-gray-600">
+          <div className="prose prose-lg max-w-none text-gray-300">
             <p>
               Mandy Rauschner, known professionally as MARADOCA, is a
               multifaceted artist who brings a unique perspective to the

@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import SocialLinks from "./SocialLinks";
 
 type ContentProps = {
@@ -21,6 +23,17 @@ export default function Content({ orbitronClassName }: ContentProps) {
         sounds.
       </p>
       <SocialLinks />
+      <div className="mt-8">
+        <Link href="/press-kit" passHref>
+          <Button
+            variant="outline"
+            size="lg"
+            className="text-white border-white bg-black bg-opacity-50 hover:bg-white hover:text-black transition-colors"
+          >
+            View Press Kit
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
