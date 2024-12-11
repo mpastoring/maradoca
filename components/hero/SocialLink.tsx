@@ -25,12 +25,12 @@ export default function SocialLink({
         <Image
           src={Icon as string}
           alt={label}
-          width={32}
-          height={32}
-          className="h-8 w-8 invert"
+          width={24}
+          height={24}
+          className="h-6 w-6 invert"
         />
       ) : (
-        <Icon className="h-8 w-8" />
+        <Icon className="h-6 w-6" />
       )}
       <span className="sr-only">{label}</span>
     </Link>

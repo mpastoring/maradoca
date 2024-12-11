@@ -4,7 +4,7 @@ import SocialLink from "./SocialLink";
 
 export default function SocialLinks() {
   return (
-    <div className="flex space-x-6">
+    <div className="flex space-x-4">
       <SocialLink
         href="https://www.instagram.com/maradoca"
         icon={Instagram}
@@ -21,7 +21,7 @@ export default function SocialLinks() {
         className="transition-transform hover:scale-110"
         aria-label="Media Gallery"
       >
-        <ImageIcon className="h-8 w-8" />
+        <ImageIcon className="h-6 w-6" />
         <span className="sr-only">Media Gallery</span>
       </Link>
       <SocialLink
