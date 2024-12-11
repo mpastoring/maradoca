@@ -2,8 +2,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlobeIcon } from "lucide-react";
+import {
+  GlobeIcon,
+  HomeIcon,
+  InstagramIcon,
+  MailIcon,
+  MusicIcon,
+} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export type Performance = {
@@ -20,6 +27,17 @@ const FEATURED_TRACKS = [
   "1825612533", // [HOT SHOT SERIES 118] - Podcast by MARADOCA [M.D.H.]
   "1773420381", // Obenmusik Podcast 122 By Maradoca
 ];
+
+// Update the date formatting function to handle timezone correctly
+function formatDate(dateString: string) {
+  // Add time to ensure correct date handling
+  const date = new Date(dateString + "T12:00:00");
+  return date.toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+}
 
 export default function Component() {
   const [showAllPast, setShowAllPast] = useState(false);
@@ -174,17 +192,15 @@ export default function Component() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Update isPast dynamically based on current date
+  // Update the date comparison logic
   const sortedPerformances = performances
     .map((gig) => ({
       ...gig,
-      isPast: new Date(gig.date) < today,
+      isPast: new Date(gig.date + "T12:00:00") < today,
     }))
     .sort((a, b) => {
-      // Sort upcoming gigs in ascending order (nearest first)
-      // Sort past gigs in descending order (most recent first)
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+      const dateA = new Date(a.date + "T12:00:00");
+      const dateB = new Date(b.date + "T12:00:00");
       return a.isPast === b.isPast
         ? a.isPast
           ? dateB.getTime() - dateA.getTime()
@@ -199,25 +215,36 @@ export default function Component() {
 
   return (
     <div className="min-h-screen bg-[#0B1120] text-gray-100">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+      {/* Floating Back Button */}
+      <Link
+        href="/"
+        className="fixed top-4 left-4 md:top-8 md:left-8 z-50 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all group"
+        aria-label="Back to Home"
+      >
+        <HomeIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-400 group-hover:text-[#ff5500] transition-colors" />
+      </Link>
+
+      <div className="container mx-auto px-3 md:px-4 py-8 md:py-12 max-w-7xl">
         {/* Press Kit Header */}
-        <header className="mb-20 text-center">
-          <div className="inline-block mb-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
-            <span className="text-sm font-medium text-gray-300">
+        <header className="mb-12 md:mb-20 text-center">
+          <div className="inline-block mb-3 px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-white/5 border border-white/10">
+            <span className="text-xs md:text-sm font-medium text-gray-300">
               Press Kit 2024
             </span>
           </div>
-          <h1 className="text-7xl font-bold mb-4 text-white tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-bold mb-3 md:mb-4 text-white tracking-tight">
             MARADOCA
           </h1>
-          <p className="text-xl text-gray-400 font-light">
+          <p className="text-lg md:text-xl text-gray-400 font-light">
             Electronic Music Artist & DJ
           </p>
-          <p className="text-lg text-gray-400 font-light">Leipzig, Germany</p>
+          <p className="text-base md:text-lg text-gray-400 font-light">
+            Leipzig, Germany
+          </p>
         </header>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
           {/* Left Column - Image & Connect */}
           <div className="lg:col-span-4 space-y-8">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
@@ -239,7 +266,7 @@ export default function Component() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-4">
+                  <ul className="space-y-3 md:space-y-4">
                     <li>
                       <a
                         href="https://www.maradoca.com"
@@ -249,7 +276,41 @@ export default function Component() {
                         <span className="font-light">maradoca.com</span>
                       </a>
                     </li>
-                    {/* Other social links */}
+                    <li>
+                      <a
+                        href="https://instagram.com/maradoca"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-gray-400 hover:text-white transition-colors group"
+                      >
+                        <InstagramIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
+                        <span className="font-light">@maradoca</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://soundcloud.com/maradoca"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-gray-400 hover:text-white transition-colors group"
+                      >
+                        <MusicIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
+                        <span className="font-light">
+                          soundcloud.com/maradoca
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="mailto:maradoca.music@gmail.com"
+                        className="flex items-center text-gray-400 hover:text-white transition-colors group"
+                      >
+                        <MailIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
+                        <span className="font-light">
+                          maradoca.music@gmail.com
+                        </span>
+                      </a>
+                    </li>
                   </ul>
                 </CardContent>
               </Card>
@@ -259,7 +320,7 @@ export default function Component() {
           {/* Right Column - Main Content */}
           <div className="lg:col-span-8 space-y-12">
             {/* About Section with subtle background */}
-            <div className="relative p-6 rounded-2xl">
+            <div className="relative p-4 md:p-6 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent rounded-2xl" />
               <section className="relative space-y-6">
                 <h2 className="text-2xl font-semibold text-white">About</h2>
@@ -295,13 +356,13 @@ export default function Component() {
             </div>
 
             {/* Featured Sets with different background */}
-            <div className="relative p-6 rounded-2xl">
+            <div className="relative p-4 md:p-6 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-r from-[#ff5500]/[0.02] to-transparent rounded-2xl" />
-              <section className="relative space-y-6">
+              <section className="relative space-y-2 md:space-y-3">
                 <h2 className="text-2xl font-semibold text-white">
                   Featured Sets
                 </h2>
-                <div className="space-y-3">
+                <div className="space-y-3 md:space-y-4">
                   {FEATURED_TRACKS.map((trackId) => (
                     <iframe
                       key={trackId}
@@ -310,7 +371,7 @@ export default function Component() {
                       scrolling="no"
                       frameBorder="no"
                       allow="autoplay"
-                      className="px-3"
+                      className="px-2 md:px-3"
                       src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
                     ></iframe>
                   ))}
@@ -319,7 +380,7 @@ export default function Component() {
             </div>
 
             {/* Performances Grid with unified background */}
-            <div className="relative p-6 rounded-2xl">
+            <div className="relative p-4 md:p-6 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl" />
               <div className="relative space-y-8">
                 {/* Upcoming Section */}
@@ -328,21 +389,19 @@ export default function Component() {
                     Upcoming
                   </h2>
                   {upcomingGigs.length > 0 ? (
-                    <ul className="space-y-3">
+                    <ul className="space-y-2">
                       {upcomingGigs.map((gig, index) => (
                         <li
                           key={index}
-                          className="group bg-white/[0.02] hover:bg-white/[0.05] p-3 rounded-lg transition-colors border border-white/5"
+                          className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
                         >
-                          <time className="text-[#ff5500] text-sm font-medium block mb-1">
-                            {new Date(gig.date).toLocaleDateString("de-DE")}
+                          <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
+                            {formatDate(gig.date)}
                           </time>
-                          <div className="text-gray-200 group-hover:text-white transition-colors">
-                            <span className="font-medium">{gig.venue}</span>
-                            <span className="text-gray-400 ml-2">
-                              {gig.location}
-                            </span>
-                          </div>
+                          <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
+                            {gig.venue}
+                          </span>
+                          <span className="text-gray-500">{gig.location}</span>
                         </li>
                       ))}
                     </ul>
@@ -351,16 +410,21 @@ export default function Component() {
                       <p className="text-gray-400 text-center">
                         New dates TBA
                         <span className="block text-sm mt-1">
-                          Contact for bookings
+                          <a
+                            href="mailto:maradoca.music@gmail.com"
+                            className="hover:text-white transition-colors hover:underline"
+                          >
+                            Contact for bookings
+                          </a>
                         </span>
                       </p>
                     </div>
                   )}
                 </section>
 
-                {/* Past Section - With show more functionality */}
+                {/* Past Section */}
                 <section>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl font-medium text-white/90">Past</h2>
                     {pastGigs.length > 6 && (
                       <button
@@ -373,22 +437,20 @@ export default function Component() {
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 ">
                     {(showAllPast ? pastGigs : pastGigs.slice(0, 6)).map(
                       (gig, index) => (
                         <li
                           key={index}
-                          className="group hover:bg-white/[0.02] p-2 rounded-lg transition-colors list-none"
+                          className="group flex items-center gap-3 hover:bg-white/[0.02] px-3 py-2 rounded-lg transition-colors list-none"
                         >
-                          <time className="text-gray-500 text-sm block mb-0.5">
-                            {new Date(gig.date).toLocaleDateString("de-DE")}
+                          <time className="text-gray-500 text-sm min-w-[70px]">
+                            {formatDate(gig.date)}
                           </time>
-                          <div className="text-gray-400 group-hover:text-gray-300 transition-colors">
-                            <span className="font-medium">{gig.venue}</span>
-                            <span className="text-gray-600 ml-2">
-                              {gig.location}
-                            </span>
-                          </div>
+                          <span className="font-medium text-gray-400 group-hover:text-gray-300 transition-colors">
+                            {gig.venue}
+                          </span>
+                          <span className="text-gray-600">{gig.location}</span>
                         </li>
                       )
                     )}
