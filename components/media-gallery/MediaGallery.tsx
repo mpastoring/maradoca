@@ -83,7 +83,7 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
               "cursor-pointer px-4 py-2 text-sm transition-colors",
               activeFilter === filter.id
                 ? "bg-[#ff5500] hover:bg-[#ff5500]/90"
-                : "bg-white/5 hover:bg-white/10"
+                : "bg-white/10 hover:bg-white/20 text-gray-100"
             )}
             onClick={() => setActiveFilter(filter.id)}
           >
@@ -110,18 +110,18 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
               onClick={() => setSelectedItem(item)}
             >
               {renderMediaItem(item)}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <div className="absolute bottom-0 left-0 p-4">
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="text-lg font-semibold text-white drop-shadow-md">
                     {item.title}
                   </h3>
                   {item.type === "video" ? (
-                    <div className="flex items-center gap-2 text-gray-300">
+                    <div className="flex items-center gap-2 text-gray-100">
                       <VideoIcon className="h-4 w-4" />
                       <span>Video</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-gray-300">
+                    <div className="flex items-center gap-2 text-gray-100">
                       <ImageIcon className="h-4 w-4" />
                       <span>Image</span>
                     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
@@ -24,54 +23,41 @@ export default function MediaModal({ item, onClose }: MediaModalProps) {
   if (!item) return null;
 
   return (
-    <Dialog open={!!item} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl bg-black/95 p-0">
+    <Dialog open={!!item} onOpenChange={() => onClose()}>
+      <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden bg-black/90 border-none">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
         >
-          <X className="h-6 w-6" />
+          <X className="h-5 w-5" />
         </button>
 
-        <div className="relative aspect-video w-full">
-          {item.type === "image" ? (
-            <CldImage
-              src={item.cloudinaryId}
-              fill
-              alt={item.title}
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-              priority
-            />
-          ) : (
+        <div className="relative flex aspect-auto max-h-[90vh] items-center justify-center">
+          {item.type === "video" ? (
             <AdvancedVideo
               cldVid={cld.video(item.cloudinaryId).resize(fill())}
-              className="h-full w-full"
+              className="h-auto max-h-[90vh] w-auto max-w-[95vw] object-contain"
               controls
-              autoPlay
-              muted={false}
+              autoPlay={false}
+              muted={true}
+            />
+          ) : (
+            <CldImage
+              src={item.cloudinaryId}
+              alt={item.title}
+              width={1920}
+              height={1080}
+              className="h-auto max-h-[90vh] w-auto max-w-[95vw] object-contain"
+              priority
             />
           )}
         </div>
 
-        <div className="p-6">
-          <h2 className="mb-2 text-xl font-semibold text-white">
-            {item.title}
-          </h2>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+          <h2 className="text-xl font-semibold text-white">{item.title}</h2>
           {item.description && (
-            <p className="text-gray-300">{item.description}</p>
+            <p className="mt-1 text-sm text-gray-200">{item.description}</p>
           )}
-          <div className="mt-4 flex flex-wrap gap-2">
-            {item.tags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="bg-white/10 hover:bg-white/20"
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
         </div>
       </DialogContent>
     </Dialog>
