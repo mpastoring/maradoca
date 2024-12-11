@@ -1,22 +1,10 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  CalendarIcon,
-  GlobeIcon,
-  InstagramIcon,
-  MusicIcon,
-} from "lucide-react";
+import { GlobeIcon } from "lucide-react";
 import Image from "next/image";
-
-type SoundCloudTrack = {
-  id: number;
-  title: string;
-  permalink_url: string;
-  playback_count: number;
-  likes_count: number;
-  reposts_count: number;
-  created_at: string;
-};
+import { useState } from "react";
 
 export type Performance = {
   date: string;
@@ -24,26 +12,6 @@ export type Performance = {
   location: string;
   isPast: boolean;
 };
-
-function cleanDescription(description: string): string {
-  if (!description) return "No description available";
-
-  const excludePatterns = [/Track:?/i, /Tracks:?/i, /TRACK IDs:?/i];
-  let cleanedDescription = description;
-
-  for (const pattern of excludePatterns) {
-    const match = cleanedDescription.match(pattern);
-    if (match && match.index !== undefined) {
-      if (pattern.source.includes("TRACK IDs") || match[0].charAt(0) === "T") {
-        cleanedDescription = cleanedDescription
-          .substring(0, match.index)
-          .trim();
-      }
-    }
-  }
-
-  return cleanedDescription || "No description available";
-}
 
 // Replace the fetch-based approach with direct track URLs
 const FEATURED_TRACKS = [
@@ -53,7 +21,9 @@ const FEATURED_TRACKS = [
   "1773420381", // Obenmusik Podcast 122 By Maradoca
 ];
 
-export default async function Component() {
+export default function Component() {
+  const [showAllPast, setShowAllPast] = useState(false);
+
   const performances: Performance[] = [
     {
       date: "2024-09-27",
@@ -67,11 +37,10 @@ export default async function Component() {
       location: "Leipzig",
       isPast: false,
     },
-    { date: "2024-10-30", venue: "tba <3", location: "Leipzig", isPast: false },
     {
-      date: "2024-10-31",
-      venue: "Argentina Tour",
-      location: "Argentina",
+      date: "2024-10-30",
+      venue: "IFZ",
+      location: "Leipzig",
       isPast: false,
     },
     {
@@ -202,167 +171,232 @@ export default async function Component() {
     },
   ];
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Update isPast dynamically based on current date
+  const sortedPerformances = performances
+    .map((gig) => ({
+      ...gig,
+      isPast: new Date(gig.date) < today,
+    }))
+    .sort((a, b) => {
+      // Sort upcoming gigs in ascending order (nearest first)
+      // Sort past gigs in descending order (most recent first)
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return a.isPast === b.isPast
+        ? a.isPast
+          ? dateB.getTime() - dateA.getTime()
+          : dateA.getTime() - dateB.getTime()
+        : a.isPast
+          ? 1
+          : -1;
+    });
+
+  const upcomingGigs = sortedPerformances.filter((gig) => !gig.isPast);
+  const pastGigs = sortedPerformances.filter((gig) => gig.isPast);
+
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto px-4 py-12">
-        <header className="mb-16 text-center">
-          <h1 className="text-5xl font-bold mb-4 text-gray-100">MARADOCA</h1>
+    <div className="min-h-screen bg-[#0B1120] text-gray-100">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Press Kit Header */}
+        <header className="mb-20 text-center">
+          <div className="inline-block mb-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
+            <span className="text-sm font-medium text-gray-300">
+              Press Kit 2024
+            </span>
+          </div>
+          <h1 className="text-7xl font-bold mb-4 text-white tracking-tight">
+            MARADOCA
+          </h1>
+          <p className="text-xl text-gray-400 font-light">
+            Electronic Music Artist & DJ
+          </p>
+          <p className="text-lg text-gray-400 font-light">Leipzig, Germany</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-semibold mb-4 text-gray-100">
-                About the Artist
-              </h2>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                MARADOCA, a rising artist based in Leipzig, Germany, delivers a
-                captivating blend of afro/melodic house, cosmic/psy elements,
-                and driving Soultechno. Her sets take you on a progressive
-                journey, balancing tropical daytime vibes with the deep,
-                trance-like energy of the night. With a seamless flow of
-                emotional depth and epic vocals, MARADOCA&apos;s music
-                isn&apos;t just about tracks—it&apos;s a transformative
-                experience.
-              </p>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Column - Image & Connect */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
+              <Image
+                src="/maradoca-portrait.jpg"
+                alt="MARADOCA"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
+                priority
+              />
             </div>
-            <div>
-              <h3 className="text-2xl font-semibold mb-3 text-gray-100">
-                Signature Sounds
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Melodic House & Techno",
-                  "Afrohouse",
-                  "Progressive",
-                  "Cosmic",
-                  "Deep",
-                ].map((genre) => (
-                  <Badge
-                    key={genre}
-                    variant="secondary"
-                    className="bg-gray-700 text-gray-200 hover:bg-gray-600"
-                  >
-                    {genre}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src="/maradoca-portrait.jpg"
-              alt="DJ MARADOCA performing"
-              fill
-              className="transition-transform duration-300 hover:scale-105 object-cover"
-              style={{ objectPosition: "100% 35%" }}
-            />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card className="bg-gray-800 shadow-md md:col-span-2 row-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center text-gray-100">
-                <MusicIcon className="mr-2" />
-                Featured Sets
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {FEATURED_TRACKS.map((trackId) => (
-                  <div key={trackId}>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl blur-xl" />
+              <Card className="relative border-0 bg-white/[0.02] backdrop-blur-sm rounded-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg font-medium text-white/90">
+                    Connect
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    <li>
+                      <a
+                        href="https://www.maradoca.com"
+                        className="flex items-center text-gray-400 hover:text-white transition-colors group"
+                      >
+                        <GlobeIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
+                        <span className="font-light">maradoca.com</span>
+                      </a>
+                    </li>
+                    {/* Other social links */}
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Right Column - Main Content */}
+          <div className="lg:col-span-8 space-y-12">
+            {/* About Section with subtle background */}
+            <div className="relative p-6 rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent rounded-2xl" />
+              <section className="relative space-y-6">
+                <h2 className="text-2xl font-semibold text-white">About</h2>
+                <p className="text-lg text-gray-300 leading-relaxed font-light">
+                  MARADOCA delivers a captivating blend of afro/melodic house,
+                  cosmic/psy elements, and driving Soultechno. Her sets take you
+                  on a progressive journey, balancing tropical daytime vibes
+                  with deep, trance-like energy.
+                </p>
+                <div className="pt-4">
+                  <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-4">
+                    Signature Sounds
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Melodic House & Techno",
+                      "Afrohouse",
+                      "Progressive",
+                      "Cosmic",
+                      "Deep",
+                    ].map((genre) => (
+                      <Badge
+                        key={genre}
+                        variant="secondary"
+                        className="px-4 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] text-gray-300 border-0"
+                      >
+                        {genre}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            {/* Featured Sets with different background */}
+            <div className="relative p-6 rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#ff5500]/[0.02] to-transparent rounded-2xl" />
+              <section className="relative space-y-6">
+                <h2 className="text-2xl font-semibold text-white">
+                  Featured Sets
+                </h2>
+                <div className="space-y-3">
+                  {FEATURED_TRACKS.map((trackId) => (
                     <iframe
+                      key={trackId}
                       width="100%"
-                      height="28"
+                      height="20"
                       scrolling="no"
                       frameBorder="no"
                       allow="autoplay"
-                      className="bg-white/5 p-1 rounded"
+                      className="px-3"
                       src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
                     ></iframe>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            {/* Performances Grid with unified background */}
+            <div className="relative p-6 rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl" />
+              <div className="relative space-y-8">
+                {/* Upcoming Section */}
+                <section>
+                  <h2 className="text-xl font-medium text-white/90 mb-4">
+                    Upcoming
+                  </h2>
+                  {upcomingGigs.length > 0 ? (
+                    <ul className="space-y-3">
+                      {upcomingGigs.map((gig, index) => (
+                        <li
+                          key={index}
+                          className="group bg-white/[0.02] hover:bg-white/[0.05] p-3 rounded-lg transition-colors border border-white/5"
+                        >
+                          <time className="text-[#ff5500] text-sm font-medium block mb-1">
+                            {new Date(gig.date).toLocaleDateString("de-DE")}
+                          </time>
+                          <div className="text-gray-200 group-hover:text-white transition-colors">
+                            <span className="font-medium">{gig.venue}</span>
+                            <span className="text-gray-400 ml-2">
+                              {gig.location}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="bg-white/[0.02] p-4 rounded-lg border border-white/5">
+                      <p className="text-gray-400 text-center">
+                        New dates TBA
+                        <span className="block text-sm mt-1">
+                          Contact for bookings
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </section>
+
+                {/* Past Section - With show more functionality */}
+                <section>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-medium text-white/90">Past</h2>
+                    {pastGigs.length > 6 && (
+                      <button
+                        onClick={() => setShowAllPast(!showAllPast)}
+                        className="text-sm text-gray-400 hover:text-white transition-colors"
+                      >
+                        {showAllPast
+                          ? "Show less"
+                          : `Show all (${pastGigs.length})`}
+                      </button>
+                    )}
                   </div>
-                ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {(showAllPast ? pastGigs : pastGigs.slice(0, 6)).map(
+                      (gig, index) => (
+                        <li
+                          key={index}
+                          className="group hover:bg-white/[0.02] p-2 rounded-lg transition-colors list-none"
+                        >
+                          <time className="text-gray-500 text-sm block mb-0.5">
+                            {new Date(gig.date).toLocaleDateString("de-DE")}
+                          </time>
+                          <div className="text-gray-400 group-hover:text-gray-300 transition-colors">
+                            <span className="font-medium">{gig.venue}</span>
+                            <span className="text-gray-600 ml-2">
+                              {gig.location}
+                            </span>
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </div>
+                </section>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 shadow-md">
-            <CardHeader>
-              <CardTitle className="flex items-center text-gray-100">
-                <CalendarIcon className="mr-2" />
-                Upcoming Gigs
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-center">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>
-                    <strong>27.09.2024:</strong> Charles Bronson, Halle | L300
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>
-                    <strong>04.10.2024:</strong> Elsterartig, Leipzig
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>
-                    <strong>30.10.2024:</strong> tba &lt;3, Leipzig
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>
-                    <strong>31.10.-17.12.2024:</strong> Argentina
-                  </span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 shadow-md">
-            <CardHeader>
-              <CardTitle className="flex items-center text-gray-100">
-                <GlobeIcon className="mr-2" />
-                Connect
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-gray-300">
-                <li>
-                  <a
-                    href="https://www.maradoca.com"
-                    className="flex items-center hover:text-gray-100 transition-colors"
-                  >
-                    <GlobeIcon className="mr-2 h-4 w-4" />
-                    maradoca.com
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.instagram.com/maradoca"
-                    className="flex items-center hover:text-gray-100 transition-colors"
-                  >
-                    <InstagramIcon className="mr-2 h-4 w-4" />
-                    @maradoca
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://soundcloud.com/maradoca"
-                    className="flex items-center hover:text-gray-100 transition-colors"
-                  >
-                    <MusicIcon className="mr-2 h-4 w-4" />
-                    soundcloud.com/maradoca
-                  </a>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
