@@ -3,6 +3,7 @@ import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { Volume2, VolumeX } from "lucide-react";
+import { memo } from "react";
 
 const cld = new Cloudinary({
   cloud: {
@@ -10,23 +11,13 @@ const cld = new Cloudinary({
   },
 });
 
-const BackgroundVideo = ({ isMuted, onToggleMute }: VideoProps) => {
-  return (
-    <>
-      <DesktopVideo isMuted={isMuted} onToggleMute={onToggleMute} />
-      <MobileVideo isMuted={isMuted} onToggleMute={onToggleMute} />
-      <Overlay />
-      <UnmuteButton isMuted={isMuted} onToggle={onToggleMute} />
-    </>
-  );
-};
-
 type VideoProps = {
   isMuted: boolean;
   onToggleMute: () => void;
 };
 
-const DesktopVideo = ({ isMuted, onToggleMute }: VideoProps) => {
+// Memoized Desktop Video Component
+const MemoizedDesktopVideo = memo(function DesktopVideo() {
   const video = cld
     .video("maradoca/2014_09_27_charles-bronson_2e10a1")
     .resize(fill());
@@ -36,7 +27,7 @@ const DesktopVideo = ({ isMuted, onToggleMute }: VideoProps) => {
       <AdvancedVideo
         cldVid={video}
         autoPlay
-        muted={isMuted}
+        muted
         loop
         playsInline
         className={cn(
@@ -46,9 +37,10 @@ const DesktopVideo = ({ isMuted, onToggleMute }: VideoProps) => {
       />
     </div>
   );
-};
+});
 
-const MobileVideo = ({ isMuted, onToggleMute }: VideoProps) => {
+// Memoized Mobile Video Component
+const MemoizedMobileVideo = memo(function MobileVideo() {
   const video = cld
     .video("maradoca/2014_09_27_charles-bronson-vertical")
     .resize(fill());
@@ -58,7 +50,7 @@ const MobileVideo = ({ isMuted, onToggleMute }: VideoProps) => {
       <AdvancedVideo
         cldVid={video}
         autoPlay
-        muted={isMuted}
+        muted
         loop
         playsInline
         className={cn(
@@ -68,35 +60,59 @@ const MobileVideo = ({ isMuted, onToggleMute }: VideoProps) => {
       />
     </div>
   );
+});
+
+const BackgroundVideo = ({ isMuted, onToggleMute }: VideoProps) => {
+  return (
+    <>
+      <MemoizedDesktopVideo />
+      <MemoizedMobileVideo />
+      <Overlay />
+      <UnmuteButton isMuted={isMuted} onToggle={onToggleMute} />
+      {/* Add a hidden video element to control mute state */}
+      <video
+        id="muteController"
+        muted={isMuted}
+        className="hidden"
+        onVolumeChange={(e) => {
+          // Sync mute state with all videos
+          const videos = document.querySelectorAll("video");
+          videos.forEach((v) => (v.muted = isMuted));
+        }}
+      />
+    </>
+  );
 };
 
-const Overlay = () => {
+const Overlay = memo(function Overlay() {
   return <div className="absolute inset-0 bg-black opacity-25" />;
-};
+});
 
-const UnmuteButton = ({
+const UnmuteButton = memo(function UnmuteButton({
   isMuted,
   onToggle,
 }: {
   isMuted: boolean;
   onToggle: () => void;
-}) => (
-  <button
-    onClick={onToggle}
-    className="absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all hover:bg-black/70"
-  >
-    {isMuted ? (
-      <>
-        <VolumeX className="h-4 w-4" />
-        <span className="hidden sm:inline">Press Space to Unmute</span>
-      </>
-    ) : (
-      <>
-        <Volume2 className="h-4 w-4" />
-        <span className="hidden sm:inline">Press Space to Mute</span>
-      </>
-    )}
-  </button>
-);
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      className="absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all hover:bg-black/70"
+    >
+      {isMuted ? (
+        <>
+          <VolumeX className="h-4 w-4" />
+          <span className="hidden sm:inline">Press Space to Unmute</span>
+        </>
+      ) : (
+        <>
+          <Volume2 className="h-4 w-4" />
+          <span className="hidden sm:inline">Press Space to Mute</span>
+        </>
+      )}
+    </button>
+  );
+});
 
 export default BackgroundVideo;
