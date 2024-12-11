@@ -1,18 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   CalendarIcon,
   GlobeIcon,
-  HeartIcon,
   InstagramIcon,
   MusicIcon,
-  PlayIcon,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -21,15 +13,14 @@ const DynamicMap = dynamic(() => import("@/components/PerformanceMap"), {
   ssr: false,
 });
 
-type Track = {
+type SoundCloudTrack = {
   id: number;
   title: string;
   permalink_url: string;
-  duration: number;
   playback_count: number;
   likes_count: number;
-  description: string;
-  artwork_url: string;
+  reposts_count: number;
+  created_at: string;
 };
 
 export type Performance = {
@@ -59,26 +50,15 @@ function cleanDescription(description: string): string {
   return cleanedDescription || "No description available";
 }
 
+// Replace the fetch-based approach with direct track URLs
+const FEATURED_TRACKS = [
+  "1954887755", // Soultechno @ Institut für Zukunft (IFZ) Leipzig I equalize x fem*vak
+  "1684032357", // Progressive & Melodic Techno: An emotional journey to freedom! (Luises Garten Teil II)
+  "1825612533", // [HOT SHOT SERIES 118] - Podcast by MARADOCA [M.D.H.]
+  "1773420381", // Obenmusik Podcast 122 By Maradoca
+];
+
 export default async function Component() {
-  const res = await fetch(
-    "https://api-v2.soundcloud.com/users/68560096/tracks?client_id=yLfooVZK5emWPvRLZQlSuGTO8pof6z4t&limit=50&linked_partitioning=1&app_version=1726736933&app_locale=en"
-  );
-  const responseJson: { collection: Track[] } = await res.json();
-
-  const tracks = responseJson.collection
-    .map((track) => ({
-      id: track.id,
-      title: track.title,
-      permalink_url: track.permalink_url,
-      duration: track.duration,
-      playback_count: track.playback_count,
-      likes_count: track.likes_count,
-      description: cleanDescription(track.description),
-      artwork_url: track.artwork_url,
-    }))
-    .sort((a, b) => b.playback_count - a.playback_count)
-    .slice(0, 5);
-
   const performances: Performance[] = [
     {
       date: "2024-09-27",
@@ -289,8 +269,7 @@ export default async function Component() {
               src="/maradoca-portrait.jpg"
               alt="DJ MARADOCA performing"
               fill
-              objectFit="cover"
-              className="transition-transform duration-300 hover:scale-105"
+              className="transition-transform duration-300 hover:scale-105 object-cover"
               style={{ objectPosition: "100% 35%" }}
             />
           </div>
@@ -301,52 +280,23 @@ export default async function Component() {
             <CardHeader>
               <CardTitle className="flex items-center text-gray-100">
                 <MusicIcon className="mr-2" />
-                Top Tracks
+                Featured Sets
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-4 text-gray-300">
-                {tracks.map((track) => (
-                  <li key={track.id} className="flex items-center">
-                    <div className="w-16 h-16 mr-4 relative">
-                      <Image
-                        src={track.artwork_url || "/default-track-image.jpg"}
-                        alt={`${track.title} artwork`}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded"
-                      />
-                    </div>
-                    <div className="flex-grow">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <a
-                              href={track.permalink_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-medium hover:text-gray-100 transition-colors"
-                            >
-                              {track.title}
-                            </a>
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs bg-gray-700 text-gray-200">
-                            <p>{track.description}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <div className="flex items-center text-sm text-gray-400 mt-1">
-                        <PlayIcon className="h-4 w-4 mr-1" />
-                        <span className="mr-3">
-                          {track.playback_count.toLocaleString()}
-                        </span>
-                        <HeartIcon className="h-4 w-4 mr-1" />
-                        <span>{track.likes_count.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </li>
+              <div className="space-y-1">
+                {FEATURED_TRACKS.map((trackId) => (
+                  <iframe
+                    key={trackId}
+                    width="100%"
+                    height="166"
+                    scrolling="no"
+                    frameBorder="no"
+                    allow="autoplay"
+                    src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%237c6c74&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false`}
+                  ></iframe>
                 ))}
-              </ul>
+              </div>
             </CardContent>
           </Card>
 

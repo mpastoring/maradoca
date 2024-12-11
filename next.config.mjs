@@ -14,6 +14,19 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "frame-src 'self' https://w.soundcloud.com;",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
