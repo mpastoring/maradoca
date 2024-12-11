@@ -1,8 +1,10 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  ArrowRight,
   GlobeIcon,
   HomeIcon,
   InstagramIcon,
@@ -461,6 +463,30 @@ export default function Component() {
           </div>
         </div>
       </div>
+
+      {/* Add this section before the footer */}
+      <section className="border-t border-white/10 bg-white/5 py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="mb-4 text-3xl font-bold text-white">
+              Media Gallery
+            </h2>
+            <p className="mb-8 text-gray-400">
+              Looking for more photos and videos? Check out our media gallery.
+            </p>
+            <Link href="/media">
+              <Button
+                variant="outline"
+                size="lg"
+                className="group border-white/20 bg-white/5 text-white hover:bg-white hover:text-black"
+              >
+                View Media Gallery
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
