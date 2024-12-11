@@ -7,6 +7,7 @@ import {
   ArrowRight,
   GlobeIcon,
   HomeIcon,
+  ImageIcon,
   InstagramIcon,
   MailIcon,
   MusicIcon,
@@ -249,6 +250,7 @@ export default function Component() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
           {/* Left Column - Image & Connect */}
           <div className="lg:col-span-4 space-y-8">
+            {/* Main Portrait */}
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
               <Image
                 src="/maradoca-portrait.jpg"
@@ -259,6 +261,31 @@ export default function Component() {
               />
             </div>
 
+            {/* Additional Press Photos */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
+                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-white/20" />
+                </div>
+              </div>
+              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
+                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-white/20" />
+                </div>
+              </div>
+              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
+                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-white/20" />
+                </div>
+              </div>
+              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
+                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-white/20" />
+                </div>
+              </div>
+            </div>
+
+            {/* Connect Card */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl blur-xl" />
               <Card className="relative border-0 bg-white/[0.02] backdrop-blur-sm rounded-xl">
