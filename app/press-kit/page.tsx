@@ -269,17 +269,19 @@ export default async function Component() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {FEATURED_TRACKS.map((trackId) => (
-                  <iframe
-                    key={trackId}
-                    width="100%"
-                    height="166"
-                    scrolling="no"
-                    frameBorder="no"
-                    allow="autoplay"
-                    src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%237c6c74&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false`}
-                  ></iframe>
+                  <div key={trackId}>
+                    <iframe
+                      width="100%"
+                      height="28"
+                      scrolling="no"
+                      frameBorder="no"
+                      allow="autoplay"
+                      className="bg-white/5 p-1 rounded"
+                      src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
+                    ></iframe>
+                  </div>
                 ))}
               </div>
             </CardContent>
@@ -361,42 +363,6 @@ export default async function Component() {
               </ul>
             </CardContent>
           </Card>
-        </div>
-
-        <div className="bg-gray-800 rounded-lg p-8 shadow-md max-h-[600px] overflow-y-auto">
-          <h2 className="text-3xl font-semibold mb-6 text-gray-100">
-            Artist Biography
-          </h2>
-          <div className="prose prose-lg max-w-none text-gray-300">
-            <p>
-              MARADOCA, a rising artist based in Leipzig, Germany, delivers a
-              captivating blend of afro/melodic house, cosmic/psy elements, and
-              driving Soultechno. Her sets take you on a progressive journey,
-              balancing tropical daytime vibes with the deep, trance-like energy
-              of the night. With a seamless flow of emotional depth and epic
-              vocals, MARADOCA&apos;s music isn&apos;t just about
-              tracks—it&apos;s a transformative experience.
-            </p>
-            <p>
-              From conscious dance events to nightclubs, her &quot;Ecstatic
-              Rave&quot; creates a powerful connection on the dancefloor,
-              uniting people to feel, move, and break free from genre
-              boundaries. Whether it&apos;s an intimate retreat or a late-night
-              it&apos;s an intimate retreat or a late-night festival, MARADOCA
-              brings a sound that&apos;s unforgettable.
-            </p>
-            <p>
-              MARADOCA&apos;s philosophy is deeply rooted in the holistic
-              connection between mind and body. Her mission is to harness the
-              power of music as a catalyst for emotional exploration, personal
-              growth, and profound human connection.
-            </p>
-            <p>
-              Join MARADOCA on her journey to FREEDOM! Her music is crafted for
-              Body, Mind & Soul, inviting listeners to explore the depths of
-              their emotions and break free from conventional limitations.
-            </p>
-          </div>
         </div>
       </div>
     </div>
