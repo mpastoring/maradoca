@@ -6,12 +6,7 @@ import {
   InstagramIcon,
   MusicIcon,
 } from "lucide-react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-
-const DynamicMap = dynamic(() => import("@/components/PerformanceMap"), {
-  ssr: false,
-});
 
 type SoundCloudTrack = {
   id: number;
@@ -212,16 +207,6 @@ export default async function Component() {
       <div className="container mx-auto px-4 py-12">
         <header className="mb-16 text-center">
           <h1 className="text-5xl font-bold mb-4 text-gray-100">MARADOCA</h1>
-          {/* <p className="text-xl text-gray-300">📍Leipzig | GERMANY</p>
-          <p className="text-lg text-gray-300 mt-2">
-            Tropical I Cosmic I Deep I Progressive &lt;3
-          </p>
-          <p className="text-lg text-gray-300 mt-2">
-            Music for Body, Mind & Soul
-          </p>
-          <p className="text-lg text-gray-300 mt-2">
-            Join me on my journey to FREEDOM!
-          </p> */}
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
@@ -378,16 +363,6 @@ export default async function Component() {
           </Card>
         </div>
 
-        {/* <div className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 text-gray-100">
-            Performance Map
-          </h2>
-          <div className="h-[400px] bg-gray-800 rounded-lg overflow-hidden">
-            <Map performances={performances} />
-          </div>
-        </div> */}
-
-        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
         <div className="bg-gray-800 rounded-lg p-8 shadow-md max-h-[600px] overflow-y-auto">
           <h2 className="text-3xl font-semibold mb-6 text-gray-100">
             Artist Biography
@@ -423,118 +398,7 @@ export default async function Component() {
             </p>
           </div>
         </div>
-
-        {/* <div className="bg-gray-800 rounded-lg p-8 shadow-md h-[600px] flex flex-col">
-            <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
-              Past Performances
-            </h2>
-            <div className="flex-grow overflow-y-auto">
-              <ul className="space-y-2 text-gray-300">
-                <li>
-                  <s>14.08.2024 Insel der Jugend, Magdeburg</s>
-                </li>
-                <li>
-                  <s>10.08.2024 Wilde Möhre I FLINTA* DJ Workshop Equalize</s>
-                </li>
-                <li>
-                  <s>02.08.2024 NatureOne Camp</s>
-                </li>
-                <li>
-                  <s>26.07.2024 H12KK Festival</s>
-                </li>
-                <li>
-                  <s>10.07.2024 Ilses Erika, Leipzig</s>
-                </li>
-                <li>
-                  <s>25.05.2024 Lisbeth Lauscht, Leipzig</s>
-                </li>
-                <li>
-                  <s>03.05.2024 Charles Bronson, Halle (Saale) I L300</s>
-                </li>
-                <li>
-                  <s>19.04.2024 The GardenLabs, Portugal</s>
-                </li>
-                <li>
-                  <s>08.03.2024 Kulturlounge, Leipzig I Equalize</s>
-                </li>
-                <li>
-                  <s>
-                    02.03.2024 Trash, Gera I Melodienschmiede Contest (Platz2)
-                  </s>
-                </li>
-                <li>
-                  <s>24.02.2024 NousNous, Leipzig</s>
-                </li>
-                <li>
-                  <s>12.01.2024 NousNous, Leipzig</s>
-                </li>
-                <li>
-                  <s>28.10.2023 Gewächshäuser, Magdeburg</s>
-                </li>
-                <li>
-                  <s>27.10.2023 Garage Ost, Leipzig</s>
-                </li>
-                <li>
-                  <s>21.10.2023 Station Endlos, Halle (private)</s>
-                </li>
-                <li>
-                  <s>14.10.2023 Tramuntana Flow, Mallorca (Retreat)</s>
-                </li>
-                <li>
-                  <s>01.10.2023 Luises Garten, Magdeburg</s>
-                </li>
-                <li>
-                  <s>13.09.2023 Rooftop Party@ Villa Palma, Sardinia</s>
-                </li>
-                <li>
-                  <s>06.09.2023 Rooftop Party@ Villa Palma, Sardinia</s>
-                </li>
-                <li>
-                  <s>28.07.2023 H12KK Festival</s>
-                </li>
-                <li>
-                  <s>17.05.2023 Trash, Gera</s>
-                </li>
-              </ul>
-            </div>
-          </div> */}
-        {/* 
-<div className="mb-16">
-          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-100">
-            Featured Playlist
-          </h2>
-          <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-            <iframe
-              width="100%"
-              height="300"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1799944080&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
-            ></iframe>
-            <div className="text-xs text-gray-400 mt-2">
-              <a
-                href="https://soundcloud.com/maradoca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                MARADOCA
-              </a>{" "}
-              ·
-              <a
-                href="https://soundcloud.com/maradoca/sets/progressive-i-melodic-house"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                Progressive I Melodic House & Techno (~125bpm)
-              </a>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
-    // </div>
   );
 }
