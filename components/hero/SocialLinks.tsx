@@ -1,4 +1,5 @@
-import { Instagram, Mail } from "lucide-react";
+import { ImageIcon, Instagram, Mail } from "lucide-react";
+import Link from "next/link";
 import SocialLink from "./SocialLink";
 
 export default function SocialLinks() {
@@ -15,6 +16,14 @@ export default function SocialLinks() {
         label="SoundCloud"
         isImage
       />
+      <Link
+        href="/media"
+        className="transition-transform hover:scale-110"
+        aria-label="Media Gallery"
+      >
+        <ImageIcon className="h-8 w-8" />
+        <span className="sr-only">Media Gallery</span>
+      </Link>
       <SocialLink
         href="mailto:maradoca.music@gmail.com"
         icon={Mail}
