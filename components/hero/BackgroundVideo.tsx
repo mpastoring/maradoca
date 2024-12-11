@@ -3,7 +3,6 @@ import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { Volume2, VolumeX } from "lucide-react";
-import { useState } from "react";
 
 const cld = new Cloudinary({
   cloud: {
@@ -11,24 +10,23 @@ const cld = new Cloudinary({
   },
 });
 
-const BackgroundVideo = () => {
-  const [isMuted, setIsMuted] = useState(true);
-
+const BackgroundVideo = ({ isMuted, onToggleMute }: VideoProps) => {
   return (
     <>
-      <DesktopVideo isMuted={isMuted} />
-      <MobileVideo isMuted={isMuted} />
+      <DesktopVideo isMuted={isMuted} onToggleMute={onToggleMute} />
+      <MobileVideo isMuted={isMuted} onToggleMute={onToggleMute} />
       <Overlay />
-      <UnmuteButton isMuted={isMuted} onToggle={() => setIsMuted(!isMuted)} />
+      <UnmuteButton isMuted={isMuted} onToggle={onToggleMute} />
     </>
   );
 };
 
 type VideoProps = {
   isMuted: boolean;
+  onToggleMute: () => void;
 };
 
-const DesktopVideo = ({ isMuted }: VideoProps) => {
+const DesktopVideo = ({ isMuted, onToggleMute }: VideoProps) => {
   const video = cld
     .video("maradoca/2014_09_27_charles-bronson_2e10a1")
     .resize(fill());
@@ -40,6 +38,7 @@ const DesktopVideo = ({ isMuted }: VideoProps) => {
         autoPlay
         muted={isMuted}
         loop
+        playsInline
         className={cn(
           "h-full min-w-full object-cover",
           "sm:aspect-video sm:overflow-clip"
@@ -49,7 +48,7 @@ const DesktopVideo = ({ isMuted }: VideoProps) => {
   );
 };
 
-const MobileVideo = ({ isMuted }: VideoProps) => {
+const MobileVideo = ({ isMuted, onToggleMute }: VideoProps) => {
   const video = cld
     .video("maradoca/2014_09_27_charles-bronson-vertical")
     .resize(fill());
@@ -61,6 +60,7 @@ const MobileVideo = ({ isMuted }: VideoProps) => {
         autoPlay
         muted={isMuted}
         loop
+        playsInline
         className={cn(
           "h-full min-w-full object-cover",
           "sm:aspect-video sm:overflow-clip"
@@ -74,31 +74,29 @@ const Overlay = () => {
   return <div className="absolute inset-0 bg-black opacity-25" />;
 };
 
-type UnmuteButtonProps = {
+const UnmuteButton = ({
+  isMuted,
+  onToggle,
+}: {
   isMuted: boolean;
   onToggle: () => void;
-};
-
-const UnmuteButton = ({ isMuted, onToggle }: UnmuteButtonProps) => {
-  return (
-    <button
-      onClick={onToggle}
-      className={cn(
-        "absolute bottom-4 right-4 z-20",
-        "rounded-full p-2",
-        "bg-black/50 text-white",
-        "hover:bg-black/70 transition-colors",
-        "focus:outline-none focus:ring-2 focus:ring-white/50"
-      )}
-      aria-label={isMuted ? "Unmute video" : "Mute video"}
-    >
-      {isMuted ? (
-        <VolumeX className="h-6 w-6" />
-      ) : (
-        <Volume2 className="h-6 w-6" />
-      )}
-    </button>
-  );
-};
+}) => (
+  <button
+    onClick={onToggle}
+    className="absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all hover:bg-black/70"
+  >
+    {isMuted ? (
+      <>
+        <VolumeX className="h-4 w-4" />
+        <span className="hidden sm:inline">Press Space to Unmute</span>
+      </>
+    ) : (
+      <>
+        <Volume2 className="h-4 w-4" />
+        <span className="hidden sm:inline">Press Space to Mute</span>
+      </>
+    )}
+  </button>
+);
 
 export default BackgroundVideo;

@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 export type Performance = {
   date: string;
@@ -43,9 +42,19 @@ function formatDate(dateString: string) {
 }
 
 export default function Component() {
-  const [showAllPast, setShowAllPast] = useState(false);
-
   const performances: Performance[] = [
+    {
+      date: "2025-02-01",
+      venue: "Westwerk",
+      location: "Leipzig",
+      isPast: false,
+    },
+    {
+      date: "2025-01-31",
+      venue: "Elsterartig",
+      location: "Leipzig",
+      isPast: false,
+    },
     {
       date: "2024-09-27",
       venue: "Charles Bronson",
@@ -435,43 +444,47 @@ export default function Component() {
                       )}
                     </div>
 
-                    {/* Past subsection */}
+                    {/* Past Performances subsection */}
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-xl font-medium text-white/90">
-                          Past
-                        </h3>
-                        {pastGigs.length > 6 && (
-                          <button
-                            onClick={() => setShowAllPast(!showAllPast)}
-                            className="text-sm text-gray-400 hover:text-white transition-colors"
-                          >
-                            {showAllPast
-                              ? "Show less"
-                              : `Show all (${pastGigs.length})`}
-                          </button>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-1 ">
-                        {(showAllPast ? pastGigs : pastGigs.slice(0, 6)).map(
-                          (gig, index) => (
-                            <li
-                              key={index}
-                              className="group flex items-center gap-3 hover:bg-white/[0.02] px-3 py-2 rounded-lg transition-colors list-none"
-                            >
-                              <time className="text-gray-500 text-sm min-w-[70px]">
-                                {formatDate(gig.date)}
-                              </time>
-                              <span className="font-medium text-gray-400 group-hover:text-gray-300 transition-colors">
-                                {gig.venue}
-                              </span>
-                              <span className="text-gray-600">
-                                {gig.location}
-                              </span>
-                            </li>
-                          )
-                        )}
-                      </div>
+                      <h3 className="text-xl font-medium text-white/90 mb-4">
+                        Past
+                      </h3>
+                      {pastGigs.length > 0 ? (
+                        <div className="space-y-6">
+                          {Object.entries(
+                            pastGigs.reduce(
+                              (acc, gig) => {
+                                const city = gig.location || "Other";
+                                if (!acc[city]) acc[city] = new Set();
+                                acc[city].add(gig.venue);
+                                return acc;
+                              },
+                              {} as Record<string, Set<string>>
+                            )
+                          ).map(([city, venues]) => (
+                            <div key={city} className="space-y-2">
+                              <h4 className="text-sm font-medium text-white/70">
+                                {city}
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {Array.from(venues).map((venue, index) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="px-4 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] text-gray-300 border-0"
+                                  >
+                                    {venue}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-white/60">
+                          No past performances to display
+                        </p>
+                      )}
                     </div>
                   </div>
                 </section>
