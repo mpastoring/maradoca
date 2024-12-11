@@ -384,105 +384,116 @@ export default function Component() {
               </section>
             </div>
 
-            {/* Featured Sets with different background */}
-            <div className="relative p-4 md:p-6 rounded-2xl">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#ff5500]/[0.02] to-transparent rounded-2xl" />
-              <section className="relative space-y-2 md:space-y-3">
-                <h2 className="text-2xl font-semibold text-white">
-                  Featured Sets
-                </h2>
-                <div className="space-y-3 md:space-y-4">
-                  {FEATURED_TRACKS.map((trackId) => (
-                    <iframe
-                      key={trackId}
-                      width="100%"
-                      height="20"
-                      scrolling="no"
-                      frameBorder="no"
-                      allow="autoplay"
-                      className="px-2 md:px-3"
-                      src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
-                    ></iframe>
-                  ))}
-                </div>
-              </section>
-            </div>
-
             {/* Performances Grid with unified background */}
             <div className="relative p-4 md:p-6 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl" />
               <div className="relative space-y-8">
                 {/* Upcoming Section */}
                 <section>
-                  <h2 className="text-xl font-medium text-white/90 mb-4">
-                    Upcoming
+                  <h2 className="text-2xl font-semibold text-white mb-6">
+                    Performances
                   </h2>
-                  {upcomingGigs.length > 0 ? (
-                    <ul className="space-y-2">
-                      {upcomingGigs.map((gig, index) => (
-                        <li
-                          key={index}
-                          className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
-                        >
-                          <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
-                            {formatDate(gig.date)}
-                          </time>
-                          <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
-                            {gig.venue}
-                          </span>
-                          <span className="text-gray-500">{gig.location}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="bg-white/[0.02] p-4 rounded-lg border border-white/5">
-                      <p className="text-gray-400 text-center">
-                        New dates TBA
-                        <span className="block text-sm mt-1">
-                          <a
-                            href="mailto:maradoca.music@gmail.com"
-                            className="hover:text-white transition-colors hover:underline"
-                          >
-                            Contact for bookings
-                          </a>
-                        </span>
-                      </p>
+                  <div className="space-y-8">
+                    {/* Upcoming subsection */}
+                    <div>
+                      <h3 className="text-xl font-medium text-white/90 mb-4">
+                        Upcoming
+                      </h3>
+                      {upcomingGigs.length > 0 ? (
+                        <ul className="space-y-2">
+                          {upcomingGigs.map((gig, index) => (
+                            <li
+                              key={index}
+                              className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
+                            >
+                              <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
+                                {formatDate(gig.date)}
+                              </time>
+                              <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
+                                {gig.venue}
+                              </span>
+                              <span className="text-gray-500">
+                                {gig.location}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div className="bg-white/[0.02] p-4 rounded-lg border border-white/5">
+                          <p className="text-gray-400 text-center">
+                            New dates TBA
+                            <span className="block text-sm mt-1">
+                              <a
+                                href="mailto:maradoca.music@gmail.com"
+                                className="hover:text-white transition-colors hover:underline"
+                              >
+                                Contact for bookings
+                              </a>
+                            </span>
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    {/* Past subsection */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-xl font-medium text-white/90">
+                          Past
+                        </h3>
+                        {pastGigs.length > 6 && (
+                          <button
+                            onClick={() => setShowAllPast(!showAllPast)}
+                            className="text-sm text-gray-400 hover:text-white transition-colors"
+                          >
+                            {showAllPast
+                              ? "Show less"
+                              : `Show all (${pastGigs.length})`}
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-1 ">
+                        {(showAllPast ? pastGigs : pastGigs.slice(0, 6)).map(
+                          (gig, index) => (
+                            <li
+                              key={index}
+                              className="group flex items-center gap-3 hover:bg-white/[0.02] px-3 py-2 rounded-lg transition-colors list-none"
+                            >
+                              <time className="text-gray-500 text-sm min-w-[70px]">
+                                {formatDate(gig.date)}
+                              </time>
+                              <span className="font-medium text-gray-400 group-hover:text-gray-300 transition-colors">
+                                {gig.venue}
+                              </span>
+                              <span className="text-gray-600">
+                                {gig.location}
+                              </span>
+                            </li>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </section>
 
-                {/* Past Section */}
-                <section>
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-medium text-white/90">Past</h2>
-                    {pastGigs.length > 6 && (
-                      <button
-                        onClick={() => setShowAllPast(!showAllPast)}
-                        className="text-sm text-gray-400 hover:text-white transition-colors"
-                      >
-                        {showAllPast
-                          ? "Show less"
-                          : `Show all (${pastGigs.length})`}
-                      </button>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-1 ">
-                    {(showAllPast ? pastGigs : pastGigs.slice(0, 6)).map(
-                      (gig, index) => (
-                        <li
-                          key={index}
-                          className="group flex items-center gap-3 hover:bg-white/[0.02] px-3 py-2 rounded-lg transition-colors list-none"
-                        >
-                          <time className="text-gray-500 text-sm min-w-[70px]">
-                            {formatDate(gig.date)}
-                          </time>
-                          <span className="font-medium text-gray-400 group-hover:text-gray-300 transition-colors">
-                            {gig.venue}
-                          </span>
-                          <span className="text-gray-600">{gig.location}</span>
-                        </li>
-                      )
-                    )}
+                {/* Featured Sets moved below performances */}
+                <section className="pt-8 border-t border-white/10">
+                  <h3 className="text-xl font-medium text-white/90 mb-6">
+                    Featured Sets
+                  </h3>
+                  <div className="space-y-3 md:space-y-4 bg-white/[0.02] rounded-xl p-4">
+                    {FEATURED_TRACKS.map((trackId) => (
+                      <iframe
+                        key={trackId}
+                        width="100%"
+                        height="20"
+                        scrolling="no"
+                        frameBorder="no"
+                        allow="autoplay"
+                        className="px-2 md:px-3"
+                        src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
+                      ></iframe>
+                    ))}
                   </div>
                 </section>
               </div>
