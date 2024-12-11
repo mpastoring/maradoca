@@ -14,13 +14,19 @@ const cld = new Cloudinary({
 type VideoProps = {
   isMuted: boolean;
   onToggleMute: () => void;
+  desktopVideoId?: string;
+  mobileVideoId?: string;
 };
 
 // Memoized Desktop Video Component
-const MemoizedDesktopVideo = memo(function DesktopVideo() {
-  const video = cld
-    .video("maradoca/2014_09_27_charles-bronson_2e10a1")
-    .resize(fill());
+const MemoizedDesktopVideo = memo(function DesktopVideo({
+  videoId,
+}: {
+  videoId?: string;
+}) {
+  if (!videoId) return null;
+
+  const video = cld.video(videoId).resize(fill());
 
   return (
     <div className={cn("absolute inset-0 overflow-clip", "hidden sm:block")}>
@@ -40,10 +46,14 @@ const MemoizedDesktopVideo = memo(function DesktopVideo() {
 });
 
 // Memoized Mobile Video Component
-const MemoizedMobileVideo = memo(function MobileVideo() {
-  const video = cld
-    .video("maradoca/2014_09_27_charles-bronson-vertical")
-    .resize(fill());
+const MemoizedMobileVideo = memo(function MobileVideo({
+  videoId,
+}: {
+  videoId?: string;
+}) {
+  if (!videoId) return null;
+
+  const video = cld.video(videoId).resize(fill());
 
   return (
     <div className={cn("absolute inset-0 overflow-clip", "sm:hidden")}>
@@ -62,11 +72,16 @@ const MemoizedMobileVideo = memo(function MobileVideo() {
   );
 });
 
-const BackgroundVideo = ({ isMuted, onToggleMute }: VideoProps) => {
+const BackgroundVideo = ({
+  isMuted,
+  onToggleMute,
+  desktopVideoId,
+  mobileVideoId,
+}: VideoProps) => {
   return (
     <>
-      <MemoizedDesktopVideo />
-      <MemoizedMobileVideo />
+      <MemoizedDesktopVideo videoId={desktopVideoId} />
+      <MemoizedMobileVideo videoId={mobileVideoId} />
       <Overlay />
       <UnmuteButton isMuted={isMuted} onToggle={onToggleMute} />
       {/* Add a hidden video element to control mute state */}

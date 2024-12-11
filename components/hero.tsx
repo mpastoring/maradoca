@@ -1,5 +1,7 @@
 "use client";
 
+import { client } from "@/lib/sanity.client";
+import { heroQuery } from "@/lib/sanity.queries";
 import { cn } from "@/lib/utils";
 import { Orbitron, Roboto } from "next/font/google";
 import { useEffect, useState } from "react";
@@ -9,18 +11,41 @@ import Content from "./hero/Content";
 const orbitron = Orbitron({ subsets: ["latin"] });
 const roboto = Roboto({ subsets: ["latin"], weight: ["300", "400", "700"] });
 
+type HeroData = {
+  title: string;
+  subtitle: string;
+  backgroundVideo: {
+    desktop: string;
+    mobile: string;
+  };
+  socialLinks: Array<{
+    platform: string;
+    url: string;
+    icon: string;
+  }>;
+};
+
 export default function Hero() {
   const [isMuted, setIsMuted] = useState(true);
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+
+  // Fetch hero data
+  useEffect(() => {
+    async function fetchHeroData() {
+      const data = await client.fetch(heroQuery);
+      setHeroData(data);
+    }
+    fetchHeroData();
+  }, []);
 
   // Handle spacebar press
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Only toggle if space is pressed and not in an input/textarea
       if (
         event.code === "Space" &&
         !["INPUT", "TEXTAREA"].includes((event.target as HTMLElement).tagName)
       ) {
-        event.preventDefault(); // Prevent page scroll
+        event.preventDefault();
         setIsMuted((prev) => !prev);
       }
     };
@@ -39,8 +64,10 @@ export default function Hero() {
       <BackgroundVideo
         isMuted={isMuted}
         onToggleMute={() => setIsMuted(!isMuted)}
+        desktopVideoId={heroData?.backgroundVideo?.desktop}
+        mobileVideoId={heroData?.backgroundVideo?.mobile}
       />
-      <Content orbitronClassName={orbitron.className} />
+      <Content orbitronClassName={orbitron.className} heroData={heroData} />
     </div>
   );
 }

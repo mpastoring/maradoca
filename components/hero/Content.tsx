@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { client } from "@/lib/sanity.client";
-import { heroQuery } from "@/lib/sanity.queries";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import SocialLinks from "./SocialLinks";
 
 type ContentProps = {
   orbitronClassName: string;
+  heroData: HeroData | null;
 };
 
 type HeroData = {
@@ -20,17 +18,7 @@ type HeroData = {
   }>;
 };
 
-export default function Content({ orbitronClassName }: ContentProps) {
-  const [heroData, setHeroData] = useState<HeroData | null>(null);
-
-  useEffect(() => {
-    async function fetchHeroData() {
-      const data = await client.fetch(heroQuery);
-      setHeroData(data);
-    }
-    fetchHeroData();
-  }, []);
-
+export default function Content({ orbitronClassName, heroData }: ContentProps) {
   if (!heroData) return null;
 
   return (
