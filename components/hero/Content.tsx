@@ -1,13 +1,38 @@
 import { Button } from "@/components/ui/button";
+import { client } from "@/lib/sanity.client";
+import { heroQuery } from "@/lib/sanity.queries";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import SocialLinks from "./SocialLinks";
 
 type ContentProps = {
   orbitronClassName: string;
 };
 
+type HeroData = {
+  title: string;
+  subtitle: string;
+  socialLinks: Array<{
+    platform: string;
+    url: string;
+    icon: string;
+  }>;
+};
+
 export default function Content({ orbitronClassName }: ContentProps) {
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+
+  useEffect(() => {
+    async function fetchHeroData() {
+      const data = await client.fetch(heroQuery);
+      setHeroData(data);
+    }
+    fetchHeroData();
+  }, []);
+
+  if (!heroData) return null;
+
   return (
     <div className="relative z-10 flex h-full flex-col items-center justify-center p-4 text-center">
       <h1
@@ -16,13 +41,12 @@ export default function Content({ orbitronClassName }: ContentProps) {
           orbitronClassName
         )}
       >
-        MARADOCA
+        {heroData.title}
       </h1>
       <p className="mb-8 max-w-md text-lg font-light sm:text-xl">
-        Embark on a journey of freedom through melodic, tropical, and cosmic
-        sounds.
+        {heroData.subtitle}
       </p>
-      <SocialLinks />
+      <SocialLinks links={heroData.socialLinks} />
       <div className="mt-6">
         <Link href="/press-kit" passHref>
           <Button
