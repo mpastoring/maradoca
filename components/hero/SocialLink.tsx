@@ -1,37 +1,50 @@
+import { Instagram, LucideIcon, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 type SocialLinkProps = {
   href: string;
-  icon: React.ComponentType<{ className?: string }> | string;
+  icon: string;
   label: string;
   isImage?: boolean;
 };
 
+// Map of icon names to Lucide components
+const iconMap: Record<string, LucideIcon> = {
+  Instagram: Instagram,
+  Mail: Mail,
+};
+
 export default function SocialLink({
   href,
-  icon: Icon,
+  icon,
   label,
-  isImage = false,
+  isImage,
 }: SocialLinkProps) {
-  return (
-    <Link
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="transition-transform hover:scale-110"
-    >
-      {isImage ? (
+  if (isImage) {
+    return (
+      <Link href={href} className="transition-transform hover:scale-110">
         <Image
-          src={Icon as string}
+          src={icon}
           alt={label}
           width={24}
           height={24}
-          className="h-6 w-6 invert"
+          className="invert"
         />
-      ) : (
-        <Icon className="h-6 w-6" />
-      )}
+        <span className="sr-only">{label}</span>
+      </Link>
+    );
+  }
+
+  const IconComponent = iconMap[icon];
+  if (!IconComponent) {
+    console.warn(`Icon "${icon}" not found in iconMap`);
+    return null;
+  }
+
+  return (
+    <Link href={href} className="transition-transform hover:scale-110">
+      <IconComponent className="h-6 w-6" />
       <span className="sr-only">{label}</span>
     </Link>
   );
