@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: "i1.sndcdn.com",
         pathname: "/artworks-**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {

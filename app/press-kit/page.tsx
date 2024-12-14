@@ -1,8 +1,7 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getPressKitImages } from "@/lib/cloudinary";
 import {
   ArrowRight,
   GlobeIcon,
@@ -41,7 +40,15 @@ function formatDate(dateString: string) {
   });
 }
 
-export default function Component() {
+export default async function Component() {
+  const pressKitImages = await getPressKitImages();
+
+  // Use the last image as main portrait
+  const mainPortrait = pressKitImages[pressKitImages.length - 1];
+
+  // Use the first 4 images as additional photos
+  const additionalPhotos = pressKitImages.slice(0, 4);
+
   const performances: Performance[] = [
     {
       date: "2025-02-01",
@@ -261,37 +268,50 @@ export default function Component() {
           <div className="lg:col-span-4 space-y-8">
             {/* Main Portrait */}
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
-              <Image
-                src="/maradoca-portrait.jpg"
-                alt="MARADOCA"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                priority
-              />
+              {mainPortrait ? (
+                <Image
+                  src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,c_fill,g_face,w_800,h_1067/${mainPortrait.cloudinaryId}`}
+                  alt={mainPortrait.description || "MARADOCA"}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-700"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                  <ImageIcon className="w-12 h-12 text-white/20" />
+                </div>
+              )}
             </div>
 
             {/* Additional Press Photos */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
-                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white/20" />
+              {additionalPhotos.map((photo, index) => (
+                <div
+                  key={photo.id}
+                  className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10"
+                >
+                  <Image
+                    src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,c_fill,g_auto,w_400,h_400/${photo.cloudinaryId}`}
+                    alt={
+                      photo.description || `MARADOCA press photo ${index + 1}`
+                    }
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
-              </div>
-              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
-                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white/20" />
-                </div>
-              </div>
-              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
-                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white/20" />
-                </div>
-              </div>
-              <div className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10">
-                <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white/20" />
-                </div>
-              </div>
+              ))}
+              {[...Array(Math.max(0, 4 - additionalPhotos.length))].map(
+                (_, i) => (
+                  <div
+                    key={`empty-${i}`}
+                    className="relative aspect-square rounded-xl overflow-hidden ring-1 ring-white/10"
+                  >
+                    <div className="w-full h-full bg-white/[0.02] flex items-center justify-center">
+                      <ImageIcon className="w-8 h-8 text-white/20" />
+                    </div>
+                  </div>
+                )
+              )}
             </div>
 
             {/* Connect Card */}
