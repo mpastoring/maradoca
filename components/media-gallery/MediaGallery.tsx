@@ -22,8 +22,8 @@ const filters: Array<{ id: Filter; label: string }> = [
   { id: "all", label: "All" },
   { id: "images", label: "Images" },
   { id: "videos", label: "Videos" },
-  { id: "performance", label: "Performances" },
-  { id: "backstage", label: "Backstage" },
+  { id: "performance", label: "Performance" },
+  { id: "artistpic", label: "Artist Pictures" },
 ];
 
 export default function MediaGallery({ items }: MediaGalleryProps) {
@@ -31,12 +31,22 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
 
   const getFilteredItems = useCallback(() => {
-    return items.filter((item) => {
+    const filteredItems = items.filter((item) => {
       if (activeFilter === "all") return true;
       if (activeFilter === "images") return item.type === "image";
       if (activeFilter === "videos") return item.type === "video";
-      return item.tags.includes(activeFilter);
+      return item.folder === activeFilter;
     });
+
+    // Sort images before videos when showing all items
+    if (activeFilter === "all") {
+      return filteredItems.sort((a, b) => {
+        if (a.type === b.type) return 0;
+        return a.type === "image" ? -1 : 1;
+      });
+    }
+
+    return filteredItems;
   }, [activeFilter, items]);
 
   const renderMediaItem = (item: MediaItem) => {
@@ -131,20 +141,11 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white drop-shadow-md">
-                        {item.title}
-                      </h3>
+                    <div className="flex items-center gap-2 text-gray-100">
                       {item.type === "video" ? (
-                        <div className="flex items-center gap-2 text-gray-100">
-                          <VideoIcon className="h-4 w-4" />
-                          <span>Video</span>
-                        </div>
+                        <VideoIcon className="h-4 w-4" />
                       ) : (
-                        <div className="flex items-center gap-2 text-gray-100">
-                          <ImageIcon className="h-4 w-4" />
-                          <span>Image</span>
-                        </div>
+                        <ImageIcon className="h-4 w-4" />
                       )}
                     </div>
                     <button

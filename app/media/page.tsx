@@ -23,7 +23,7 @@ export default async function MediaPage() {
             Media Gallery
           </h1>
           <p className="text-lg text-gray-400">
-            Explore moments from performances, backstage, and more
+            Explore moments from performances, artist pictures, and more
           </p>
           <div className="mt-6">
             <Link href="/press-kit">

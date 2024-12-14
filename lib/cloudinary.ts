@@ -61,7 +61,7 @@ export async function getMediaItems(): Promise<MediaItem[]> {
         },
         body: JSON.stringify({
           expression:
-            "folder:maradoca/gallery/performances/* OR folder:maradoca/gallery/artistpic/*",
+            "folder:maradoca/gallery/performance/* OR folder:maradoca/gallery/artistpic/*",
           with_field: "tags",
           max_results: 500,
         }),
@@ -70,18 +70,25 @@ export async function getMediaItems(): Promise<MediaItem[]> {
 
     const data = await response.json();
 
-    return data.resources.map((resource: any) => ({
-      id: resource.public_id,
-      type: resource.resource_type === "video" ? "video" : "image",
-      title:
-        resource.context?.custom?.caption ||
-        resource.public_id.split("/").pop(),
-      description: resource.context?.custom?.alt,
-      tags: resource.tags || [],
-      cloudinaryId: resource.public_id,
-      width: resource.width,
-      height: resource.height,
-    }));
+    return data.resources.map((resource: any) => {
+      // Extract folder from public_id (e.g., "maradoca/gallery/performances" or "maradoca/gallery/artistpic")
+      const folderPath = resource.public_id.split("/").slice(0, -1).join("/");
+      const folder = folderPath.split("/").pop(); // Get the last folder name (performances or artistpic)
+
+      return {
+        id: resource.public_id,
+        type: resource.resource_type === "video" ? "video" : "image",
+        title:
+          resource.context?.custom?.caption ||
+          resource.public_id.split("/").pop(),
+        description: resource.context?.custom?.alt,
+        tags: resource.tags || [],
+        cloudinaryId: resource.public_id,
+        width: resource.width,
+        height: resource.height,
+        folder: folder || "",
+      };
+    });
   } catch (error) {
     console.error("Error fetching media items:", error);
     return [];

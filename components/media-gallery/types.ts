@@ -8,6 +8,7 @@ export type MediaItem = {
   width: number;
   height: number;
   thumbnailUrl?: string;
+  folder: string;
 };
 
 export type Filter = "all" | "images" | "videos" | string;
