@@ -13,7 +13,7 @@ export async function getPressKitImages(): Promise<MediaItem[]> {
           Authorization: `Basic ${btoa(
             process.env.CLOUDINARY_API_KEY +
               ":" +
-              process.env.CLOUDINARY_API_SECRET
+              process.env.CLOUDINARY_API_SECRET,
           )}`,
         },
         body: JSON.stringify({
@@ -21,7 +21,7 @@ export async function getPressKitImages(): Promise<MediaItem[]> {
           with_field: "tags",
           max_results: 500,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -56,15 +56,16 @@ export async function getMediaItems(): Promise<MediaItem[]> {
           Authorization: `Basic ${btoa(
             process.env.CLOUDINARY_API_KEY +
               ":" +
-              process.env.CLOUDINARY_API_SECRET
+              process.env.CLOUDINARY_API_SECRET,
           )}`,
         },
         body: JSON.stringify({
-          expression: "folder:maradoca/gallery/performances/* OR folder:maradoca/gallery/artistpic/*",
+          expression:
+            "folder:maradoca/gallery/performances/* OR folder:maradoca/gallery/artistpic/*",
           with_field: "tags",
           max_results: 500,
         }),
-      }
+      },
     );
 
     const data = await response.json();

@@ -58,7 +58,7 @@ export default function Hero() {
     <div
       className={cn(
         "h-full w-full bg-black text-white overflow-hidden",
-        roboto.className
+        roboto.className,
       )}
     >
       <BackgroundVideo
