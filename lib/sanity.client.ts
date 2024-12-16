@@ -6,4 +6,6 @@ export const client = createClient({
   apiVersion: "2024-03-20",
   useCdn: false,
   token: process.env.SANITY_API_TOKEN,
+  withCredentials: true,
+  perspective: "published",
 });

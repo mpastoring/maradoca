@@ -39,3 +39,25 @@ export const heroQuery = groq`*[_type == "hero"][0]{
     icon
   }
 }`;
+
+export const pressKitQuery = `*[_type == "pressKit"][0] {
+  about {
+    description,
+    genres
+  },
+  performances[] {
+    date,
+    venue,
+    location
+  },
+  featuredTracks[] {
+    trackId,
+    title
+  },
+  socialLinks {
+    website,
+    instagram,
+    soundcloud,
+    email
+  }
+}`;

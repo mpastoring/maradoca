@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPressKitImages } from "@/lib/cloudinary";
+import { client } from "@/lib/sanity.client";
+import { pressKitQuery } from "@/lib/sanity.queries";
 import {
   ArrowRight,
   Download,
@@ -22,14 +24,6 @@ export type Performance = {
   isPast: boolean;
 };
 
-// Replace the fetch-based approach with direct track URLs
-const FEATURED_TRACKS = [
-  "1954887755", // Soultechno @ Institut für Zukunft (IFZ) Leipzig I equalize x fem*vak
-  "1684032357", // Progressive & Melodic Techno: An emotional journey to freedom! (Luises Garten Teil II)
-  "1825612533", // [HOT SHOT SERIES 118] - Podcast by MARADOCA [M.D.H.]
-  "1773420381", // Obenmusik Podcast 122 By Maradoca
-];
-
 // Update the date formatting function to handle timezone correctly
 function formatDate(dateString: string) {
   // Add time to ensure correct date handling
@@ -43,189 +37,28 @@ function formatDate(dateString: string) {
 
 export default async function Component() {
   const pressKitImages = await getPressKitImages();
-  console.log("All press kit images:", pressKitImages);
+  const pressKitData = await client.fetch(pressKitQuery);
 
   // Use the last image as main portrait
   const mainPortrait = pressKitImages[pressKitImages.length - 1];
-  console.log("Main portrait:", mainPortrait);
 
   // Use other images as additional photos, excluding the main portrait
   const additionalPhotos = pressKitImages.slice(0, -1).slice(0, 4);
-  console.log("Additional photos:", additionalPhotos);
 
   // Function to get download URL
   const getDownloadUrl = (cloudinaryId: string) =>
     `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/fl_attachment/${cloudinaryId}`;
 
-  const performances: Performance[] = [
-    {
-      date: "2025-02-01",
-      venue: "Westwerk",
-      location: "Leipzig",
-      isPast: false,
-    },
-    {
-      date: "2025-01-31",
-      venue: "Elsterartig",
-      location: "Leipzig",
-      isPast: false,
-    },
-    {
-      date: "2024-09-27",
-      venue: "Charles Bronson",
-      location: "Halle",
-      isPast: false,
-    },
-    {
-      date: "2024-10-04",
-      venue: "Elsterartig",
-      location: "Leipzig",
-      isPast: false,
-    },
-    {
-      date: "2024-10-30",
-      venue: "IFZ",
-      location: "Leipzig",
-      isPast: false,
-    },
-    {
-      date: "2024-08-14",
-      venue: "Insel der Jugend",
-      location: "Magdeburg",
-      isPast: true,
-    },
-    {
-      date: "2024-08-10",
-      venue: "Wilde Möhre I FLINTA* DJ Workshop Equalize",
-      location: "Unknown",
-      isPast: true,
-    },
-    {
-      date: "2024-08-02",
-      venue: "NatureOne Camp",
-      location: "Unknown",
-      isPast: true,
-    },
-    {
-      date: "2024-07-26",
-      venue: "H12KK Festival",
-      location: "Unknown",
-      isPast: true,
-    },
-    {
-      date: "2024-07-10",
-      venue: "Ilses Erika",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2024-05-25",
-      venue: "Lisbeth Lauscht",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2024-05-03",
-      venue: "Charles Bronson",
-      location: "Halle (Saale)",
-      isPast: true,
-    },
-    {
-      date: "2024-04-19",
-      venue: "The GardenLabs",
-      location: "Portugal",
-      isPast: true,
-    },
-    {
-      date: "2024-03-08",
-      venue: "Kulturlounge",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2024-03-02",
-      venue: "Trash",
-      location: "Gera",
-      isPast: true,
-    },
-    {
-      date: "2024-02-24",
-      venue: "NousNous",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2024-01-12",
-      venue: "NousNous",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2023-10-28",
-      venue: "Gewächshäuser",
-      location: "Magdeburg",
-      isPast: true,
-    },
-    {
-      date: "2023-10-27",
-      venue: "Garage Ost",
-      location: "Leipzig",
-      isPast: true,
-    },
-    {
-      date: "2023-10-21",
-      venue: "Station Endlos",
-      location: "Halle",
-      isPast: true,
-    },
-    {
-      date: "2023-10-14",
-      venue: "Tramuntana Flow",
-      location: "Mallorca",
-      isPast: true,
-    },
-    {
-      date: "2023-10-01",
-      venue: "Luises Garten",
-      location: "Magdeburg",
-      isPast: true,
-    },
-    {
-      date: "2023-09-13",
-      venue: "Rooftop Party@ Villa Palma",
-      location: "Sardinia",
-      isPast: true,
-    },
-    {
-      date: "2023-09-06",
-      venue: "Rooftop Party@ Villa Palma",
-      location: "Sardinia",
-      isPast: true,
-    },
-    {
-      date: "2023-07-28",
-      venue: "H12KK Festival",
-      location: "Unknown",
-      isPast: true,
-    },
-    {
-      date: "2023-05-17",
-      venue: "Trash",
-      location: "Gera",
-      isPast: true,
-    },
-  ];
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   // Update the date comparison logic
-  const sortedPerformances = performances
-    .map((gig) => ({
+  const sortedPerformances = pressKitData.performances
+    .map((gig: Performance) => ({
       ...gig,
       isPast: new Date(gig.date + "T12:00:00") < today,
     }))
-    .sort((a, b) => {
+    .sort((a: Performance, b: Performance) => {
       const dateA = new Date(a.date + "T12:00:00");
       const dateB = new Date(b.date + "T12:00:00");
       return a.isPast === b.isPast
@@ -237,8 +70,10 @@ export default async function Component() {
           : -1;
     });
 
-  const upcomingGigs = sortedPerformances.filter((gig) => !gig.isPast);
-  const pastGigs = sortedPerformances.filter((gig) => gig.isPast);
+  const upcomingGigs = sortedPerformances.filter(
+    (gig: Performance) => !gig.isPast
+  );
+  const pastGigs = sortedPerformances.filter((gig: Performance) => gig.isPast);
 
   return (
     <div className="min-h-screen bg-[#0B1120] text-gray-100">
@@ -351,7 +186,7 @@ export default async function Component() {
                   <ul className="space-y-3 md:space-y-4">
                     <li>
                       <a
-                        href="https://www.maradoca.com"
+                        href={pressKitData.socialLinks.website}
                         className="flex items-center text-gray-400 hover:text-white transition-colors group"
                       >
                         <GlobeIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
@@ -360,7 +195,7 @@ export default async function Component() {
                     </li>
                     <li>
                       <a
-                        href="https://instagram.com/maradoca"
+                        href={pressKitData.socialLinks.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center text-gray-400 hover:text-white transition-colors group"
@@ -371,7 +206,7 @@ export default async function Component() {
                     </li>
                     <li>
                       <a
-                        href="https://soundcloud.com/maradoca"
+                        href={pressKitData.socialLinks.soundcloud}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center text-gray-400 hover:text-white transition-colors group"
@@ -384,12 +219,12 @@ export default async function Component() {
                     </li>
                     <li>
                       <a
-                        href="mailto:maradoca.music@gmail.com"
+                        href={`mailto:${pressKitData.socialLinks.email}`}
                         className="flex items-center text-gray-400 hover:text-white transition-colors group"
                       >
                         <MailIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
                         <span className="font-light">
-                          maradoca.music@gmail.com
+                          {pressKitData.socialLinks.email}
                         </span>
                       </a>
                     </li>
@@ -407,23 +242,14 @@ export default async function Component() {
               <section className="relative space-y-6">
                 <h2 className="text-2xl font-semibold text-white">About</h2>
                 <p className="text-lg text-gray-300 leading-relaxed font-light">
-                  MARADOCA delivers a captivating blend of afro/melodic house,
-                  cosmic/psy elements, and driving Soultechno. Her sets take you
-                  on a progressive journey, balancing tropical daytime vibes
-                  with deep, trance-like energy.
+                  {pressKitData.about.description}
                 </p>
                 <div className="pt-4">
                   <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-4">
                     Signature Sounds
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {[
-                      "Melodic House & Techno",
-                      "Afrohouse",
-                      "Progressive",
-                      "Cosmic",
-                      "Deep",
-                    ].map((genre) => (
+                    {pressKitData.about.genres.map((genre: string) => (
                       <Badge
                         key={genre}
                         variant="secondary"
@@ -454,22 +280,24 @@ export default async function Component() {
                       </h3>
                       {upcomingGigs.length > 0 ? (
                         <ul className="space-y-2">
-                          {upcomingGigs.map((gig, index) => (
-                            <li
-                              key={index}
-                              className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
-                            >
-                              <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
-                                {formatDate(gig.date)}
-                              </time>
-                              <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
-                                {gig.venue}
-                              </span>
-                              <span className="text-gray-500">
-                                {gig.location}
-                              </span>
-                            </li>
-                          ))}
+                          {upcomingGigs.map(
+                            (gig: Performance, index: number) => (
+                              <li
+                                key={index}
+                                className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
+                              >
+                                <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
+                                  {formatDate(gig.date)}
+                                </time>
+                                <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
+                                  {gig.venue}
+                                </span>
+                                <span className="text-gray-500">
+                                  {gig.location}
+                                </span>
+                              </li>
+                            )
+                          )}
                         </ul>
                       ) : (
                         <div className="bg-white/[0.02] p-4 rounded-lg border border-white/5">
@@ -477,7 +305,7 @@ export default async function Component() {
                             New dates TBA
                             <span className="block text-sm mt-1">
                               <a
-                                href="mailto:maradoca.music@gmail.com"
+                                href={`mailto:${pressKitData.socialLinks.email}`}
                                 className="hover:text-white transition-colors hover:underline"
                               >
                                 Contact for bookings
@@ -497,7 +325,10 @@ export default async function Component() {
                         <div className="space-y-6">
                           {Object.entries(
                             pastGigs.reduce(
-                              (acc, gig) => {
+                              (
+                                acc: Record<string, Set<string>>,
+                                gig: Performance
+                              ) => {
                                 const city = gig.location || "Other";
                                 if (!acc[city]) acc[city] = new Set();
                                 acc[city].add(gig.venue);
@@ -511,15 +342,17 @@ export default async function Component() {
                                 {city}
                               </h4>
                               <div className="flex flex-wrap gap-2">
-                                {Array.from(venues).map((venue, index) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="px-4 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] text-gray-300 border-0"
-                                  >
-                                    {venue}
-                                  </Badge>
-                                ))}
+                                {Array.from(venues as Set<string>).map(
+                                  (venue, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="px-4 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] text-gray-300 border-0"
+                                    >
+                                      {venue}
+                                    </Badge>
+                                  )
+                                )}
                               </div>
                             </div>
                           ))}
@@ -539,18 +372,20 @@ export default async function Component() {
                     Featured Sets
                   </h3>
                   <div className="space-y-3 md:space-y-4 bg-white/[0.02] rounded-xl p-4">
-                    {FEATURED_TRACKS.map((trackId) => (
-                      <iframe
-                        key={trackId}
-                        width="100%"
-                        height="20"
-                        scrolling="no"
-                        frameBorder="no"
-                        allow="autoplay"
-                        className="px-2 md:px-3"
-                        src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
-                      ></iframe>
-                    ))}
+                    {pressKitData.featuredTracks.map(
+                      (track: { trackId: string; title: string }) => (
+                        <iframe
+                          key={track.trackId}
+                          width="100%"
+                          height="20"
+                          scrolling="no"
+                          frameBorder="no"
+                          allow="autoplay"
+                          className="px-2 md:px-3"
+                          src={`https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/${track.trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true&show_playcount=false&show_artwork=false&buying=false&sharing=false&download=false`}
+                        ></iframe>
+                      )
+                    )}
                   </div>
                 </section>
               </div>

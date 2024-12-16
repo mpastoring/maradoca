@@ -7,8 +7,7 @@
     "build": "bun --bun next build",
     "start": "bun --bun next start",
     "lint": "next lint",
-    "sanity": "bun --bun sanity dev",
-    "seed": "bun run scripts/seed-hero.ts",
+    "sanity": "npx sanity dev",
     "precommit": "tsc && npm run lint && prettier --write ./**/*.{ts,tsx,js,json,md}"
   },
   "dependencies": {
