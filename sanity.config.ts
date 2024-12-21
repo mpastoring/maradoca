@@ -14,18 +14,24 @@ import { schema } from "./sanity/schemaTypes";
 export default defineConfig({
   name: "default",
   title: "Maradoca",
-  projectId: 'exxpqu5g',
-  dataset: 'production',
-  plugins: [deskTool(), visionTool()],
+  projectId: "exxpqu5g",
+  dataset: "production",
+  basePath: "/studio",
+  plugins: [
+    deskTool({
+      defaultDocumentNode: (S) => S.document().views([S.view.form()]),
+    }),
+    visionTool(),
+  ],
   schema: {
     types: schema.types,
   },
   cors: {
     origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3333',
-      'http://localhost:5173',
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3333",
+      "http://localhost:5173",
     ],
     credentials: true,
   },
