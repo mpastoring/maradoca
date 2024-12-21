@@ -2,12 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
-import { ChevronLeft, ChevronRight, Download, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2, X } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 import { useCallback, useEffect, useState } from "react";
 import { MediaItem } from "./types";
@@ -122,7 +121,7 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
               <div className="relative">
                 {!loadedImages[currentItem.id] && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Skeleton className="h-[calc(90vh-40px)] w-[80vw] rounded-lg" />
+                    <Loader2 className="h-8 w-8 animate-spin text-white/70" />
                   </div>
                 )}
                 <CldImage
