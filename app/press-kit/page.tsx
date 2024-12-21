@@ -267,102 +267,117 @@ export default async function Component() {
             <div className="relative p-4 md:p-6 rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-white/[0.05] rounded-2xl" />
               <div className="relative space-y-8">
-                {/* Upcoming Section */}
                 <section>
-                  <h2 className="text-2xl font-semibold text-white mb-6">
+                  <h2 className="text-2xl font-semibold text-white mb-8">
                     Performances
                   </h2>
-                  <div className="space-y-8">
-                    {/* Upcoming subsection */}
-                    <div>
-                      <h3 className="text-xl font-medium text-white/90 mb-4">
-                        Upcoming
-                      </h3>
-                      {upcomingGigs.length > 0 ? (
-                        <ul className="space-y-2">
-                          {upcomingGigs.map(
-                            (gig: Performance, index: number) => (
-                              <li
-                                key={index}
-                                className="group flex items-center gap-3 bg-white/[0.02] hover:bg-white/[0.05] px-3 py-2 rounded-lg transition-colors border border-white/5"
-                              >
-                                <time className="text-[#ff5500] text-sm font-medium min-w-[70px]">
-                                  {formatDate(gig.date)}
-                                </time>
-                                <span className="font-medium text-gray-200 group-hover:text-white transition-colors">
-                                  {gig.venue}
-                                </span>
-                                <span className="text-gray-500">
-                                  {gig.location}
-                                </span>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      ) : (
-                        <div className="bg-white/[0.02] p-4 rounded-lg border border-white/5">
-                          <p className="text-gray-400 text-center">
-                            New dates TBA
-                            <span className="block text-sm mt-1">
-                              <a
-                                href={`mailto:${pressKitData.socialLinks.email}`}
-                                className="hover:text-white transition-colors hover:underline"
-                              >
-                                Contact for bookings
-                              </a>
-                            </span>
-                          </p>
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Past Performances subsection */}
-                    <div>
-                      <h3 className="text-xl font-medium text-white/90 mb-4">
-                        Past
-                      </h3>
-                      {pastGigs.length > 0 ? (
-                        <div className="space-y-6">
-                          {Object.entries(
-                            pastGigs.reduce(
-                              (
-                                acc: Record<string, Set<string>>,
-                                gig: Performance
-                              ) => {
-                                const city = gig.location || "Other";
-                                if (!acc[city]) acc[city] = new Set();
-                                acc[city].add(gig.venue);
-                                return acc;
-                              },
-                              {} as Record<string, Set<string>>
-                            )
-                          ).map(([city, venues]) => (
-                            <div key={city} className="space-y-2">
-                              <h4 className="text-sm font-medium text-white/70">
-                                {city}
+                  {/* Upcoming section with prominent styling */}
+                  <div className="mb-12">
+                    <h3 className="inline-block px-4 py-1 bg-white/10 rounded-full text-sm font-medium text-white/90 mb-6">
+                      Upcoming Shows
+                    </h3>
+                    {upcomingGigs.length > 0 ? (
+                      <div className="space-y-3">
+                        {upcomingGigs.map((gig: Performance, index: number) => (
+                          <div
+                            key={index}
+                            className="group flex items-center gap-4 bg-white/[0.02] hover:bg-white/[0.05] p-4 rounded-xl transition-colors border border-white/5"
+                          >
+                            <time className="flex flex-col items-center justify-center min-w-[80px] bg-white/5 rounded-lg p-2">
+                              <span className="text-[#ff5500] text-xl font-semibold">
+                                {new Date(gig.date).toLocaleDateString(
+                                  "de-DE",
+                                  { day: "2-digit" }
+                                )}
+                              </span>
+                              <span className="text-gray-400 text-sm">
+                                {new Date(gig.date).toLocaleDateString(
+                                  "de-DE",
+                                  { month: "2-digit" }
+                                )}
+                              </span>
+                            </time>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-white group-hover:text-[#ff5500] transition-colors">
+                                {gig.venue}
                               </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {Array.from(venues as Set<string>).map(
-                                  (venue, index) => (
+                              <p className="text-sm text-gray-400">
+                                {gig.location}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="bg-white/[0.02] p-6 rounded-xl border border-white/5 text-center">
+                        <p className="text-gray-400">
+                          New dates coming soon
+                          <span className="block text-sm mt-2">
+                            <a
+                              href={`mailto:${pressKitData.socialLinks.email}`}
+                              className="text-[#ff5500] hover:text-white transition-colors hover:underline"
+                            >
+                              Contact for bookings
+                            </a>
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Past section with alphabetical organization */}
+                  <div>
+                    <h3 className="inline-block px-4 py-1 bg-white/10 rounded-full text-sm font-medium text-white/90 mb-6">
+                      Past Shows
+                    </h3>
+                    {pastGigs.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Object.entries(
+                          pastGigs.reduce(
+                            (
+                              acc: Record<string, Set<string>>,
+                              gig: Performance
+                            ) => {
+                              const city = gig.location || "Other";
+                              if (!acc[city]) acc[city] = new Set();
+                              acc[city].add(gig.venue);
+                              return acc;
+                            },
+                            {}
+                          )
+                        )
+                          .sort(([a], [b]) => a.localeCompare(b)) // Sort cities alphabetically
+                          .map(([city, venues]) => (
+                            <div
+                              key={city}
+                              className="bg-white/[0.02] rounded-lg p-3 hover:bg-white/[0.04] transition-colors"
+                            >
+                              <h5 className="text-sm font-medium text-white/70 mb-2 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500]/40"></span>
+                                {city}
+                              </h5>
+                              <div className="flex flex-wrap gap-1.5">
+                                {Array.from(venues)
+                                  .sort((a, b) => a.localeCompare(b)) // Sort venues alphabetically
+                                  .map((venue, index) => (
                                     <Badge
                                       key={index}
                                       variant="secondary"
-                                      className="px-4 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] text-gray-300 border-0"
+                                      className="px-2 py-0.5 text-xs bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 border-0 transition-colors"
                                     >
                                       {venue}
                                     </Badge>
-                                  )
-                                )}
+                                  ))}
                               </div>
                             </div>
                           ))}
-                        </div>
-                      ) : (
-                        <p className="text-white/60">
-                          No past performances to display
-                        </p>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <p className="text-white/60">
+                        No past performances to display
+                      </p>
+                    )}
                   </div>
                 </section>
 
