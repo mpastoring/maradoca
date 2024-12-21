@@ -21,7 +21,7 @@ type RootLayoutProps = {
 
 export const metadata: Metadata = {
   title: "MARADOCA",
-  description: "MARADOCA - Music and Personal Growth",
+  description: "Melodic Techno DJ Crafting Cosmic Journeys • Leipzig",
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
