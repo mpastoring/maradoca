@@ -241,7 +241,7 @@ export default async function Component() {
               <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent rounded-2xl" />
               <section className="relative space-y-6">
                 <h2 className="text-2xl font-semibold text-white">About</h2>
-                <p className="text-lg text-gray-300 leading-relaxed font-light">
+                <p className="text-lg text-gray-300 leading-relaxed">
                   {pressKitData.about.description}
                 </p>
                 <div className="pt-4">

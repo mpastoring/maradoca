@@ -3,13 +3,15 @@
 import { client } from "@/lib/sanity.client";
 import { heroQuery } from "@/lib/sanity.queries";
 import { cn } from "@/lib/utils";
-import { Orbitron, Roboto } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import { useEffect, useState } from "react";
 import BackgroundVideo from "./hero/BackgroundVideo";
 import Content from "./hero/Content";
 
-const orbitron = Orbitron({ subsets: ["latin"] });
-const roboto = Roboto({ subsets: ["latin"], weight: ["300", "400", "700"] });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
 
 type HeroData = {
   title: string;
@@ -29,7 +31,6 @@ export default function Hero() {
   const [isMuted, setIsMuted] = useState(true);
   const [heroData, setHeroData] = useState<HeroData | null>(null);
 
-  // Fetch hero data
   useEffect(() => {
     async function fetchHeroData() {
       const data = await client.fetch(heroQuery);
@@ -38,7 +39,6 @@ export default function Hero() {
     fetchHeroData();
   }, []);
 
-  // Handle spacebar press
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (
@@ -58,7 +58,7 @@ export default function Hero() {
     <div
       className={cn(
         "h-full w-full bg-black text-white overflow-hidden",
-        roboto.className,
+        spaceGrotesk.variable,
       )}
     >
       <BackgroundVideo
@@ -67,7 +67,7 @@ export default function Hero() {
         desktopVideoId={heroData?.backgroundVideo?.desktop}
         mobileVideoId={heroData?.backgroundVideo?.mobile}
       />
-      <Content orbitronClassName={orbitron.className} heroData={heroData} />
+      <Content heroData={heroData} />
     </div>
   );
 }
