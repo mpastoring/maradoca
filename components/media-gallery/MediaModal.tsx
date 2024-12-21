@@ -83,10 +83,10 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
 
   return (
     <Dialog open={!!currentItem} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-[90vw] h-[90vh] p-0 overflow-hidden bg-black/90 border-none">
+      <DialogContent className="max-w-screen h-screen p-0 overflow-hidden bg-black/95 border-none">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+          className="absolute right-6 top-6 z-50 rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>
@@ -95,7 +95,7 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
           {currentIndex > 0 && (
             <button
               onClick={handlePrevious}
-              className="absolute left-4 z-50 rounded-full bg-black/50 p-3 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+              className="absolute left-6 z-50 rounded-full bg-black/50 p-3 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
@@ -103,22 +103,25 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
           {currentIndex < items.length - 1 && (
             <button
               onClick={handleNext}
-              className="absolute right-4 z-50 rounded-full bg-black/50 p-3 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+              className="absolute right-6 z-50 rounded-full bg-black/50 p-3 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
           )}
 
-          <div className="relative max-h-full max-w-full">
+          <div className="relative max-h-screen max-w-screen">
             {currentItem.type === "video" ? (
-              <AdvancedVideo
-                cldVid={cld.video(currentItem.cloudinaryId).resize(fill())}
-                className="max-h-[calc(90vh-100px)] w-auto max-w-full object-contain"
-                controls
-                muted
-              />
+              <div className="relative aspect-video w-screen max-w-screen">
+                <AdvancedVideo
+                  cldVid={cld.video(currentItem.cloudinaryId).resize(fill())}
+                  className="absolute inset-0 h-full w-full object-contain"
+                  controls
+                  muted={false}
+                  autoPlay={true}
+                />
+              </div>
             ) : (
-              <div className="relative">
+              <div className="relative w-screen max-w-screen h-screen flex items-center justify-center">
                 {!loadedImages[currentItem.id] && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-white/70" />
@@ -127,10 +130,9 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
                 <CldImage
                   src={currentItem.cloudinaryId}
                   alt={currentItem.title}
-                  width={1920}
-                  height={1080}
+                  fill
                   className={cn(
-                    "max-h-[calc(90vh-40px)] w-auto max-w-full object-contain transition-opacity duration-300",
+                    "object-contain transition-opacity duration-300",
                     loadedImages[currentItem.id] ? "opacity-100" : "opacity-0"
                   )}
                   priority
@@ -141,7 +143,7 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
                     variant="ghost"
                     size="icon"
                     onClick={handleDownload}
-                    className="absolute bottom-4 right-4 text-white hover:bg-white/20"
+                    className="absolute bottom-6 right-6 text-white hover:bg-white/20"
                   >
                     <Download className="h-5 w-5" />
                   </Button>

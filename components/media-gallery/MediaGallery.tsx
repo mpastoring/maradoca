@@ -78,7 +78,7 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
           <AdvancedVideo
             cldVid={video}
             className="h-full w-full object-cover"
-            autoPlay={false}
+            autoPlay={true}
             muted={true}
             controls={false}
           />
