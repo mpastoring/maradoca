@@ -98,9 +98,7 @@ export default async function Component() {
               Press Kit 2024
             </span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-3 md:mb-4 text-white tracking-tight">
-            MARADOCA
-          </h1>
+          <h1 className="brand-title mb-3 md:mb-4 text-white">MARADOCA</h1>
           <p className="text-lg md:text-xl text-gray-400 font-light">
             Electronic Music Artist & DJ
           </p>
