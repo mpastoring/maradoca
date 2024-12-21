@@ -17,8 +17,8 @@ export function ConnectCard({ socialLinks }: ConnectCardProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-3 md:space-y-4">
-            <li>
+          <div className="space-y-3 md:space-y-4">
+            <div>
               <a
                 href={socialLinks.website}
                 className="flex items-center text-gray-400 hover:text-white transition-colors group"
@@ -26,8 +26,8 @@ export function ConnectCard({ socialLinks }: ConnectCardProps) {
                 <GlobeIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
                 <span className="font-light">maradoca.com</span>
               </a>
-            </li>
-            <li>
+            </div>
+            <div>
               <a
                 href={socialLinks.instagram}
                 target="_blank"
@@ -37,8 +37,8 @@ export function ConnectCard({ socialLinks }: ConnectCardProps) {
                 <InstagramIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
                 <span className="font-light">@maradoca</span>
               </a>
-            </li>
-            <li>
+            </div>
+            <div>
               <a
                 href={socialLinks.soundcloud}
                 target="_blank"
@@ -48,8 +48,8 @@ export function ConnectCard({ socialLinks }: ConnectCardProps) {
                 <MusicIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
                 <span className="font-light">soundcloud.com/maradoca</span>
               </a>
-            </li>
-            <li>
+            </div>
+            <div>
               <a
                 href={`mailto:${socialLinks.email}`}
                 className="flex items-center text-gray-400 hover:text-white transition-colors group"
@@ -57,8 +57,8 @@ export function ConnectCard({ socialLinks }: ConnectCardProps) {
                 <MailIcon className="mr-3 h-5 w-5 group-hover:text-[#ff5500]" />
                 <span className="font-light">{socialLinks.email}</span>
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
