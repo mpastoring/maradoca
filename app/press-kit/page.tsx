@@ -17,11 +17,15 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export type Performance = {
+type Performance = {
   date: string;
   venue: string;
   location: string;
-  isPast: boolean;
+  isPast?: boolean;
+};
+
+type VenuesByCity = {
+  [city: string]: string[];
 };
 
 // Update the date formatting function to handle timezone correctly
@@ -333,21 +337,26 @@ export default async function Component() {
                     </h3>
                     {pastGigs.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Object.entries(
-                          pastGigs.reduce(
-                            (
-                              acc: Record<string, Set<string>>,
-                              gig: Performance
-                            ) => {
-                              const city = gig.location || "Other";
-                              if (!acc[city]) acc[city] = new Set();
-                              acc[city].add(gig.venue);
-                              return acc;
-                            },
-                            {}
-                          )
+                        {(
+                          Object.entries(
+                            pastGigs.reduce(
+                              (acc: VenuesByCity, gig: Performance) => {
+                                const city = gig.location || "Other";
+                                if (!acc[city]) {
+                                  acc[city] = [];
+                                }
+                                if (!acc[city].includes(gig.venue)) {
+                                  acc[city].push(gig.venue);
+                                }
+                                return acc;
+                              },
+                              {} as VenuesByCity
+                            )
+                          ) as [string, string[]][]
                         )
-                          .sort(([a], [b]) => a.localeCompare(b)) // Sort cities alphabetically
+                          .sort(([cityA], [cityB]) =>
+                            cityA.localeCompare(cityB)
+                          )
                           .map(([city, venues]) => (
                             <div
                               key={city}
@@ -358,11 +367,11 @@ export default async function Component() {
                                 {city}
                               </h5>
                               <div className="flex flex-wrap gap-1.5">
-                                {Array.from(venues)
-                                  .sort((a, b) => a.localeCompare(b)) // Sort venues alphabetically
+                                {venues
+                                  .sort((a, b) => a.localeCompare(b))
                                   .map((venue, index) => (
                                     <Badge
-                                      key={index}
+                                      key={`${city}-${venue}-${index}`}
                                       variant="secondary"
                                       className="px-2 py-0.5 text-xs bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 border-0 transition-colors"
                                     >
