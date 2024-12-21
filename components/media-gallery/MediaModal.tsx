@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
@@ -24,6 +26,7 @@ type MediaModalProps = {
 
 export default function MediaModal({ item, items, onClose }: MediaModalProps) {
   const [currentItem, setCurrentItem] = useState<MediaItem | null>(item);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setCurrentItem(item);
@@ -44,6 +47,10 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
       setCurrentItem(items[currentIndex - 1]);
     }
   }, [currentIndex, items]);
+
+  const handleImageLoad = useCallback((itemId: string) => {
+    setLoadedImages((prev) => ({ ...prev, [itemId]: true }));
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -113,22 +120,33 @@ export default function MediaModal({ item, items, onClose }: MediaModalProps) {
               />
             ) : (
               <div className="relative">
+                {!loadedImages[currentItem.id] && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Skeleton className="h-[calc(90vh-40px)] w-[80vw] rounded-lg" />
+                  </div>
+                )}
                 <CldImage
                   src={currentItem.cloudinaryId}
                   alt={currentItem.title}
                   width={1920}
                   height={1080}
-                  className="max-h-[calc(90vh-40px)] w-auto max-w-full object-contain"
+                  className={cn(
+                    "max-h-[calc(90vh-40px)] w-auto max-w-full object-contain transition-opacity duration-300",
+                    loadedImages[currentItem.id] ? "opacity-100" : "opacity-0"
+                  )}
                   priority
+                  onLoad={() => handleImageLoad(currentItem.id)}
                 />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleDownload}
-                  className="absolute bottom-4 right-4 text-white hover:bg-white/20"
-                >
-                  <Download className="h-5 w-5" />
-                </Button>
+                {loadedImages[currentItem.id] && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleDownload}
+                    className="absolute bottom-4 right-4 text-white hover:bg-white/20"
+                  >
+                    <Download className="h-5 w-5" />
+                  </Button>
+                )}
               </div>
             )}
           </div>

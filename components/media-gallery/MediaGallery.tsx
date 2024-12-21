@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
@@ -8,7 +9,7 @@ import { fill } from "@cloudinary/url-gen/actions/resize";
 import { AnimatePresence, motion } from "framer-motion";
 import { Download, ImageIcon, PlayCircle, VideoIcon } from "lucide-react";
 import { CldImage } from "next-cloudinary";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MediaModal from "./MediaModal";
 import { Filter, MediaGalleryProps, MediaItem } from "./types";
 
@@ -29,6 +30,26 @@ const filters: Array<{ id: Filter; label: string }> = [
 export default function MediaGallery({ items }: MediaGalleryProps) {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  useEffect(() => {
+    // Set initial loading to false after a short delay
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 500); // Short delay to prevent flash
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleImageLoad = (itemId: string) => {
+    setLoadedImages((prev) => ({ ...prev, [itemId]: true }));
+  };
+
+  const handleImageError = (itemId: string) => {
+    setFailedImages((prev) => ({ ...prev, [itemId]: true }));
+  };
 
   const getFilteredItems = useCallback(() => {
     const filteredItems = items.filter((item) => {
@@ -49,10 +70,9 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
     return filteredItems;
   }, [activeFilter, items]);
 
-  const renderMediaItem = (item: MediaItem) => {
+  const renderMediaItem = (item: MediaItem, index: number) => {
     if (item.type === "video") {
       const video = cld.video(item.cloudinaryId).resize(fill());
-
       return (
         <>
           <AdvancedVideo
@@ -70,14 +90,33 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
     }
 
     return (
-      <CldImage
-        src={item.cloudinaryId}
-        alt={item.title}
-        fill
-        className="object-cover transition-transform duration-300 group-hover:scale-105"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        priority={false}
-      />
+      <>
+        {(!loadedImages[item.id] || failedImages[item.id]) && (
+          <div className="absolute inset-0">
+            <Skeleton className="h-full w-full" />
+          </div>
+        )}
+        <CldImage
+          src={item.cloudinaryId}
+          alt={item.title}
+          fill
+          className={cn(
+            "object-cover transition-all duration-300 group-hover:scale-105",
+            !loadedImages[item.id] || failedImages[item.id]
+              ? "opacity-0"
+              : "opacity-100"
+          )}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          priority={index < 4}
+          loading={index < 4 ? "eager" : "lazy"}
+          onLoad={(e) => {
+            if (e.target instanceof HTMLImageElement && e.target.complete) {
+              handleImageLoad(item.id);
+            }
+          }}
+          onError={() => handleImageError(item.id)}
+        />
+      </>
     );
   };
 
@@ -126,39 +165,58 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       >
         <AnimatePresence mode="popLayout">
-          {getFilteredItems().map((item) => (
-            <motion.div
-              key={item.id}
-              layout
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-              className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-black/20"
-              onClick={() => setSelectedItem(item)}
-            >
-              {renderMediaItem(item)}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-gray-100">
-                      {item.type === "video" ? (
-                        <VideoIcon className="h-4 w-4" />
-                      ) : (
-                        <ImageIcon className="h-4 w-4" />
-                      )}
+          {isInitialLoading
+            ? // Show skeleton placeholders during initial load
+              Array.from({ length: 8 }).map((_, index) => (
+                <motion.div
+                  key={`skeleton-${index}`}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative aspect-square overflow-hidden rounded-lg bg-black/20"
+                >
+                  <Skeleton className="h-full w-full" />
+                </motion.div>
+              ))
+            : getFilteredItems().map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-black/20"
+                  onClick={() => setSelectedItem(item)}
+                >
+                  {renderMediaItem(item, index)}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-gray-100">
+                          {item.type === "video" ? (
+                            <VideoIcon className="h-4 w-4" />
+                          ) : (
+                            <ImageIcon className="h-4 w-4" />
+                          )}
+                        </div>
+                        {(item.type === "video" ||
+                          (loadedImages[item.id] &&
+                            !failedImages[item.id])) && (
+                          <button
+                            onClick={(e) => handleDownload(e, item)}
+                            className="rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+                          >
+                            <Download className="h-5 w-5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <button
-                      onClick={(e) => handleDownload(e, item)}
-                      className="rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
-                    >
-                      <Download className="h-5 w-5" />
-                    </button>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              ))}
         </AnimatePresence>
       </motion.div>
 
