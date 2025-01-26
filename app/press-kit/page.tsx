@@ -17,8 +17,23 @@ export default async function PressKitPage() {
   const pressKitImages = await getPressKitImages();
   const { data: pressKitData } = await sanityFetch({ query: pressKitQuery });
 
-  const mainPortrait = pressKitImages[pressKitImages.length - 1];
-  const additionalPhotos = pressKitImages.slice(0, -1).slice(0, 4);
+  // Helper functions for image filtering
+  const hasMainPortraitTag = (image: { tags: string[] }) =>
+    image.tags.includes("main-portrait");
+
+  const getMainPortrait = (images: typeof pressKitImages) => {
+    if (!images.length) throw new Error("No press kit images available");
+    return images.find(hasMainPortraitTag) ?? images[images.length - 1];
+  };
+
+  const getAdditionalPhotos = (images: typeof pressKitImages) =>
+    images.filter((image) => !hasMainPortraitTag(image));
+
+  // Get main portrait with fallback to last image
+  const mainPortrait = getMainPortrait(pressKitImages);
+
+  // Get all photos except the main portrait
+  const additionalPhotos = getAdditionalPhotos(pressKitImages);
 
   const { upcomingGigs, pastGigs } = sortPerformances(
     pressKitData.performances
