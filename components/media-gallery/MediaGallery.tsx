@@ -174,7 +174,11 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                    delay: index * 0.05,
+                  }}
                   className="relative aspect-square overflow-hidden rounded-lg bg-black/20"
                 >
                   <Skeleton className="h-full w-full" />
@@ -187,14 +191,28 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                    delay: index * 0.05,
+                  }}
                   className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-black/20"
                   onClick={() => setSelectedItem(item)}
                 >
                   {renderMediaItem(item, index)}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <div className="flex items-center justify-between">
+                      <motion.div
+                        className="flex items-center justify-between"
+                        initial={{ y: 20, opacity: 0 }}
+                        whileHover={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                      >
                         <div className="flex items-center gap-2 text-gray-100">
                           {item.type === "video" ? (
                             <VideoIcon className="h-4 w-4" />
@@ -205,16 +223,18 @@ export default function MediaGallery({ items }: MediaGalleryProps) {
                         {(item.type === "video" ||
                           (loadedImages[item.id] &&
                             !failedImages[item.id])) && (
-                          <button
+                          <motion.button
                             onClick={(e) => handleDownload(e, item)}
-                            className="rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+                            className="rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm hover:bg-black/70 hover:text-white"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                           >
                             <Download className="h-5 w-5" />
-                          </button>
+                          </motion.button>
                         )}
-                      </div>
+                      </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               ))}
         </AnimatePresence>
