@@ -5,7 +5,7 @@ const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 export async function getPressKitImages(): Promise<MediaItem[]> {
   try {
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/resources/search`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/resources/search?t=${Date.now()}`,
       {
         method: "POST",
         headers: {
@@ -48,7 +48,7 @@ export async function getMediaItems(): Promise<MediaItem[]> {
   try {
     // Fetch both images and videos from the gallery/performances and gallery/artistpic folders
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/resources/search`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/resources/search?t=${Date.now()}`,
       {
         method: "POST",
         headers: {
