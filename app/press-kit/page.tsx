@@ -13,8 +13,11 @@ import { Track } from "@/types/press-kit";
 import { ArrowRight, HomeIcon } from "lucide-react";
 import Link from "next/link";
 
+export const revalidate = 0; // Disable periodic revalidation
+export const dynamic = "force-dynamic";
+
 export default async function PressKitPage() {
-  const pressKitImages = await getPressKitImages();
+  const { images: pressKitImages, version } = await getPressKitImages();
   const { data: pressKitData } = await sanityFetch({ query: pressKitQuery });
 
   // Helper functions for image filtering

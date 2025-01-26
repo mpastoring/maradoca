@@ -1,8 +1,24 @@
 import { MediaItem } from "@/components/media-gallery/types";
 
+interface PressKitImagesResponse {
+  images: MediaItem[];
+  version: string;
+}
+
+// Simple string hash function
+function hashCode(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash.toString(16);
+}
+
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-export async function getPressKitImages(): Promise<MediaItem[]> {
+export async function getPressKitImages(): Promise<PressKitImagesResponse> {
   try {
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${cloudName}/resources/search?t=${Date.now()}`,
@@ -26,21 +42,32 @@ export async function getPressKitImages(): Promise<MediaItem[]> {
 
     const data = await response.json();
 
-    return data.resources.map((resource: any) => ({
-      id: resource.public_id,
-      type: resource.resource_type === "video" ? "video" : "image",
-      title:
-        resource.context?.custom?.caption ||
-        resource.public_id.split("/").pop(),
-      description: resource.context?.custom?.alt,
-      tags: resource.tags || [],
-      cloudinaryId: resource.public_id,
-      width: resource.width,
-      height: resource.height,
-    }));
+    // Create version hash from all tags
+    const versionHash = hashCode(
+      data.resources.flatMap((r: any) => r.tags || []).join("|"),
+    );
+
+    return {
+      images: data.resources.map((resource: any) => ({
+        id: resource.public_id,
+        type: resource.resource_type === "video" ? "video" : "image",
+        title:
+          resource.context?.custom?.caption ||
+          resource.public_id.split("/").pop(),
+        description: resource.context?.custom?.alt,
+        tags: resource.tags || [],
+        cloudinaryId: resource.public_id,
+        width: resource.width,
+        height: resource.height,
+      })),
+      version: versionHash,
+    };
   } catch (error) {
     console.error("Error fetching press kit images:", error);
-    return [];
+    return {
+      images: [],
+      version: "0",
+    };
   }
 }
 
